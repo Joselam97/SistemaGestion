@@ -1,10 +1,12 @@
 class MenuPrincipal:
+    #Muestra las opciones del menu principal
     def mostrar_menu_principal(self):
         print("Bienvenido al sistema de gestión del restaurante")
         print("1. Opciones Administrativas")
         print("2. Opciones Generales")
         print("3. Salir")
 
+#Muestra las opciones del menu Administrativo
     def opciones_administrativas(self):
         print("---- Opciones Administrativas ----")
         print("1. Gestion de Tipo de Alimentos")
@@ -15,6 +17,7 @@ class MenuPrincipal:
         print("6. Reporte de Ventas")
         print("7. Volver al Menú Principal")
 
+#Muestra las opciones del Menu General
     def opciones_generales(self):
         print("---- Opciones Generales ----")
         print("1. Crear Usuario")
@@ -23,6 +26,7 @@ class MenuPrincipal:
         print("3. Consulta de ordenes")
         print("4. Volver al Menú Principal")
 
+#Solicita la opcion que queramos escoger para desplegar sus opciones
     def main(self):
         while True:
             self.mostrar_menu_principal()
