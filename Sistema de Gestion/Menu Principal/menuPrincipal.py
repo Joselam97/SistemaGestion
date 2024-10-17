@@ -38,6 +38,7 @@ class MenuPrincipal:
             else:
                 print("Opción no válida, intenta de nuevo.")
 
+
 if __name__ == "__main__":
     menu = MenuPrincipal()
     menu.main()
