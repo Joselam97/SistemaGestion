@@ -1,0 +1,34 @@
+body{
+    background-image: url("/CSS/Section4/img/fondo.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+h1{
+    color: #ef476f;
+    background-color: beige;
+    text-align: center;
+    text-transform: uppercase;
+    text-shadow: 2px 2px 2px #ced4da; /*sombra de la letra en el fondo y color de la sombra*/
+    letter-spacing: 3px; /*espacio entre las letras*/
+    word-spacing: 3px; /*espacio entre palabras*/
+    border-radius: 7px;
+    text-decoration: underline;
+}
+
+.caja{
+    padding: 15px; /*espacion entre bordes y contenido*/
+    margin: auto; /*centrar el contenido*/
+    width: 50%; /*ancho del contenido*/
+    background-color: hsla(200, 74%, 50%, 0.5);
+    border-radius: 5px; /*borde redondeado*/
+}
+
+.texto{
+    text-align: justify; /*justifica el texto*/
+    /*text-decoration: underline; /*esto generalmente se usa para indicar que el texto es un link*/
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    text-indent: 30px; /*sangria*/
+    line-height: 1.5; /*Permite incrementar espacio entre lineas*/
+    text-shadow: 1px 1px 2px #ced4da; 
+}

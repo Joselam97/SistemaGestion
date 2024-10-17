@@ -1,0 +1,39 @@
+table{
+    width: 100%; /*longitud de la tabla en la pagina */
+}
+
+table, th, td{ /*indicamos lo que queremos modificar */
+    border: 1px solid rgb(3, 27, 243);
+    border-collapse: collapse; /* eliminamos los espacios entre bordes */
+    padding: 5px; /* ampliamos espacio entre casilla */
+    /* border-spacing: 2px; */
+}
+
+caption{
+    color: indianred;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-size: 45px; 
+    line-height: 70px; /*Esto separa el caption de la tabla a 70px */
+}
+
+th{
+    color: rgb(252, 252, 235);
+    background-color: #1d3557;
+}
+
+tr:nth-child(even){ /*nth-child(even) es para seleccionar renglones pares*/
+    background-color: #f1faee;
+}
+tr:nth-child(odd){ /*aca estariamos trabajando con renglones impares*/
+    background-color: #a8dadc;
+}
+
+td{  /* centrar table data */
+    text-align: center;
+}
+
+/*
+th{ Alinear titulo de columnas a la izquierda
+    text-align: left;
+}
+*/

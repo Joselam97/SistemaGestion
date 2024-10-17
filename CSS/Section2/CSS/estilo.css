@@ -1,0 +1,32 @@
+h1{
+    text-align: center;
+    color: #e63946;
+}
+
+.caja1{
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    padding: 10px 0px 40px 0px; 
+    border: 15px solid #457b9d; 
+    margin: 30px;  
+    text-align: center;
+    background-color: #f1faee;
+    max-width: 300px; /*limita el ancho del elemento*/
+    max-height: 100%; /*limita el alto del elemento*/
+    outline: 10px double #a8dadc; /*aplica un borde por encima del padding en este caso*/
+    outline-offset: 10px; /*separa el borde 10px del padding*/
+    box-sizing: border-box; /*aplica un padding a cada lado*/
+}
+
+.caja2{
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    padding: 10px 0px 40px 0px; 
+    border: 15px solid #457b9d; 
+    margin: 20px;  
+    text-align: center;
+    background-color: #f1faee;
+    max-width: 300px; /*limita el ancho del elemento*/
+    max-height: 100%; /*limita el alto del elemento*/
+    outline: 10px double #a8dadc; /*aplica un borde por encima del padding en este caso*/
+    outline-offset: 10px; /*separa el borde 10px del padding*/
+    box-sizing: border-box;
+}

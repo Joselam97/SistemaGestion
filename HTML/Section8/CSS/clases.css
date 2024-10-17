@@ -1,0 +1,32 @@
+*{ /*Esto aplica a toda la pagina por Default, al menos que se defina algo diferente*/
+    margin: 0;
+    padding: 0;
+}
+
+/*Nombre del id 'titulo_principal'*/ /*Generalmente los id solo deben aplicarse a un 'elemento'*/
+#titulo_principal{
+    color: crimson;
+    text-align: center;
+    margin: 15px;
+}
+
+h2{
+    color: rgb(136, 79, 243);
+}
+
+p{
+    color: cornflowerblue;
+}
+
+/*Nombre de la clase 'tarjeta'*/
+.tarjeta{
+    border: 5px solid #560bad;
+    background-color: rgb(222, 247, 247);
+    text-align: center;
+    margin: 15px 100px;
+    padding: 15px;
+}
+
+.subtitulo{
+    color: #f72585;
+}

@@ -1,0 +1,15 @@
+h1{
+    text-align: center;
+    color: crimson;
+}
+
+div.contenedor{
+    border: 3px dashed greenyellow;
+    width: 70%;
+    height: 200px; /*El overflow funciona SIEMPRE que utilicemos Height*/
+    margin: auto;
+    /*overflow: visible; /*Se muestr todo lo que se sale del contenido div*/
+    /*overflow: hidden; /*Se oculta todo lo que se sale del contenido div*/
+    overflow: scroll; /*Recorre todo el contenido del div por medio de scroll*/
+    overflow: auto; /*Se recorre por medio de scroll pero no se muestre la barra scroll horizontal*/
+}

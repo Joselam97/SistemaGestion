@@ -1,0 +1,29 @@
+body {
+    background-color: rgb(204, 245, 255);
+}
+
+h1 {
+    color: rgb(50, 50, 165); background-color: rgb(126, 159, 197);
+}
+
+p {
+    color: aliceblue;
+    background-color: rgba(255, 72, 5, 0.5);
+    padding: 15px; /* Esto es para dar mas grosor a cuadros de texto ubicados en <p> */
+    border: 10px solid palevioletred; /* Esto envuelve al padding */
+
+    /*margin: 20px; /* El margin lo que hace es separar cajas de parrafos entre ellas */
+
+    /*
+    margin-top: 40px;
+    margin-right: 10px;
+    margin-bottom: 20px;
+    margin-left: 10px;
+    */
+
+    margin: 40px 10px 50px 15px; /* 1ro:Top, 2do:Right, 3ro:Bottom, 4to:Left */
+
+    /* margin: auto; Para centrar margenes */
+
+    text-align: center; /* Centra los textos 'center' */
+}
