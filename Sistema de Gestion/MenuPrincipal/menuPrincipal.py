@@ -8,15 +8,6 @@ class MenuPrincipal:
         print("3. Salir")
 
 
-#Muestra las opciones del Menu General
-    def opciones_generales(self):
-        print("---- Opciones Generales ----")
-        print("1. Crear Usuario")
-        print("2. Consultar Alimentos")
-        print("3. Consulta de puntos e historico de redenciones")
-        print("3. Consulta de ordenes")
-        print("4. Volver al Menú Principal")
-
 #Solicita la opcion que queramos escoger para desplegar sus opciones
     def main(self):
         while True:
