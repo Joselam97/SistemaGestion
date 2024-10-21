@@ -1,3 +1,4 @@
+
 class MenuPrincipal:
     #Muestra las opciones del menu principal
     def mostrar_menu_principal(self):
@@ -6,16 +7,6 @@ class MenuPrincipal:
         print("2. Opciones Generales")
         print("3. Salir")
 
-#Muestra las opciones del menu Administrativo
-    def opciones_administrativas(self):
-        print("---- Opciones Administrativas ----")
-        print("1. Gestion de Tipo de Alimentos")
-        print("2. Gestion de Alimentos")
-        print("3. Gestion de Combos")
-        print("4. Gestion de Ordenes")
-        print("5. Facturar")
-        print("6. Reporte de Ventas")
-        print("7. Volver al Menú Principal")
 
 #Muestra las opciones del Menu General
     def opciones_generales(self):
@@ -31,16 +22,17 @@ class MenuPrincipal:
         while True:
             self.mostrar_menu_principal()
             opcion = input("Selecciona una opción: ")
-        
+            
+            #Supongo que aca incerto las funciones para moverme a las diferentes clases
             if opcion == "1":
-                self.opciones_administrativas()
+                print("1. Opciones Administrativas")
             elif opcion == "2":
-                self.opciones_generales()
+                print("2. Opciones Generales")
             elif opcion == "3":
-                print("Saliendo del sistema...")
+                print("3. Saliendo del sistema...")
                 break
             else:
-                print("Opción no válida, intenta de nuevo.")
+                print("4. Indique una opcion valida!")
 
 
 if __name__ == "__main__":
