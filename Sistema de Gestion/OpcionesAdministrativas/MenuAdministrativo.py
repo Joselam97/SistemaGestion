@@ -14,10 +14,11 @@ class OpcionesAdministrativas:
         
     def main(self):
         while True:
+            #Me muestra las opciones del menu de OpcionesAdministrativas
             self.mostrar_opciones_administrativas()
             opcion = input("Selecciona una opción: ")
         
-        #Supongo que aca incerto las funciones para moverme a las diferentes clases
+#Me permite moverme a las diferentes opciones 'classes' dentro del menu Administrativo
             if opcion == "1":
                 print("1. Gestion de Tipo de Alimentos")
             elif opcion == "2":
@@ -32,8 +33,10 @@ class OpcionesAdministrativas:
                 print("6. Reporte de Ventas")
             elif opcion == "7":
                 print("Volviendo al Menu Principal...")
+                #El break sera solo mientras no he asociado los menus
+                break
             else:
-                print("Opción no válida, intenta de nuevo.")
+                print("Opcion no válida, intenta de nuevo.")
             
             
 if __name__ == "__main__":

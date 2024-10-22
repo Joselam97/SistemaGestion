@@ -11,10 +11,11 @@ class OpcionesGenerales:
         
     def main(self):
         while True:
+            #Muestra las opciones del menu de OpcionesGenerales
             self.mostrar_opciones_generales()
             opcion = input("Selecciona una opcion: ")
                 
-            #Supongo que aca incerto las funciones para moverme a las diferentes clases
+#Me permite moverme a las diferentes opciones 'classes' dentro del menu General
             if opcion == "1":
                 print("1. Crear Usuario")
             elif opcion == "2":

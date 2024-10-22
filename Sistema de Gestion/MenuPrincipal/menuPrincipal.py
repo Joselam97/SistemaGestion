@@ -1,4 +1,3 @@
-
 class MenuPrincipal:
     #Muestra las opciones del menu principal
     def mostrar_menu_principal(self):

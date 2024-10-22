@@ -1,127 +1,149 @@
+ # Importa la clase que gestiona tipos de alimentosimport shelve
 import shelve
-from GestionTipoAlimento import GestionTipoAlimento  # Importar la clase que gestiona tipos de alimentos
-
 class GestionAlimento:
-    def __init__(self, db_name='alimentos.db', tipos_db_name='tipos_alimentos.db'):
-        # Usamos shelve para almacenar los alimentos y los tipos de alimentos
+    #db_name es la variable que alamacena el nombre del archivo en la base de datos
+    def __init__(self, db_name='alimentos.db'):
         self.db_name = db_name
-        self.tipos_db_name = tipos_db_name
-        self.gestion_tipo_alimento = GestionTipoAlimento(tipos_db_name)
 
-    def incluir_alimento(self, nombre, tipo_indice, costo_compra, margen_ganancia):
-        with shelve.open(self.db_name) as db_alimentos, shelve.open(self.tipos_db_name) as db_tipos:
-            # Verificar si el alimento ya existe por nombre
+#Funcion para incluir alimento
+    def incluir_alimento(self, nombre, tipo, costo_compra, margen_ganancia):
+        #con shelve se abre el archivo de la base de datos db_alimentos para hacer la consulta
+        with shelve.open(self.db_name) as db_alimentos:
+            
+            #Verifica si ya esta incluido en shelve
             if nombre in db_alimentos:
                 print(f"Error: Ya existe un alimento con el nombre '{nombre}'.")
                 return
-
-            # Verificar si el tipo de alimento existe por índice
-            tipos_list = list(db_tipos.keys())
-            if tipo_indice < 0 or tipo_indice >= len(tipos_list):
-                print("Error: El índice de tipo de alimento es inválido.")
-                return
-            tipo_seleccionado = tipos_list[tipo_indice]
-
-            # Calcular el precio de venta según el margen de ganancia
+            
+            #En caso contrario, se agrega el margen de ganancia que debe estar en un rango de 0 a 100
             if margen_ganancia < 0 or margen_ganancia > 100:
                 print("Error: El margen de ganancia debe estar entre 0 y 100.")
                 return
+            #convierte en fraccion el margen de ganancia y le suma 1, para obtener un 'double' y multiplicarlo al costo de compra
+            #Ejemplo: 400 * (1 + 0.2 / 100) = 400 * (1.2) = 480 
             precio_venta = costo_compra * (1 + margen_ganancia / 100)
-
-            # Almacenar el nuevo alimento
+            #diccionario de la informacion del alimento para sacar sus margenes y precios
             db_alimentos[nombre] = {
-                'tipo': tipo_seleccionado,
+                'tipo': tipo,
                 'costo_compra': costo_compra,
                 'margen_ganancia': margen_ganancia,
                 'precio_venta': precio_venta
             }
             print(f"Alimento '{nombre}' agregado con éxito.")
 
+
+#Elimina alimento
     def eliminar_alimento(self, nombre):
+        #con shelve se abre el archivo de la base de datos db_alimentos para hacer la consulta
         with shelve.open(self.db_name) as db_alimentos:
-            # Verificar si el alimento existe
+            #En caso de no estar en la base de datos
             if nombre not in db_alimentos:
                 print(f"Error: El alimento '{nombre}' no existe.")
                 return
-
-            # Verificar si el alimento está asociado a algún combo, orden o factura (simulado)
+            #En caso de estar el alimento asociado a un combo, orden o factura
             if self.alimento_asociado(nombre):
                 print(f"Error: No se puede eliminar el alimento '{nombre}' porque está asociado a un combo, orden o factura.")
                 return
-
-            # Eliminar el alimento
+            #En caso de estar el alimento disponible y no asociado a nada para poder eliminarlo
             del db_alimentos[nombre]
             print(f"Alimento '{nombre}' eliminado con éxito.")
 
-    def modificar_alimento(self, nombre, nuevo_tipo_indice=None, nuevo_costo_compra=None, nuevo_margen_ganancia=None):
-        with shelve.open(self.db_name) as db_alimentos, shelve.open(self.tipos_db_name) as db_tipos:
-            # Verificar si el alimento existe
+
+#funcion para modificar el alimento
+    def modificar_alimento(self, nombre, nuevo_tipo=None, nuevo_costo_compra=None, nuevo_margen_ganancia=None):
+        #con shelve se abre el archivo de la base de datos db_alimentos para hacer la consulta
+        with shelve.open(self.db_name) as db_alimentos:
+            
+            #En caso no de estar el alimento en la base de datos, mostrara un error
             if nombre not in db_alimentos:
                 print(f"Error: El alimento '{nombre}' no existe.")
                 return
-
-            # Modificar los valores si se proporcionan nuevos
             alimento = db_alimentos[nombre]
-
-            # Cambiar tipo de alimento si se pasa un nuevo índice
-            if nuevo_tipo_indice is not None:
-                tipos_list = list(db_tipos.keys())
-                if nuevo_tipo_indice < 0 or nuevo_tipo_indice >= len(tipos_list):
-                    print("Error: El índice de tipo de alimento es inválido.")
-                    return
-                alimento['tipo'] = tipos_list[nuevo_tipo_indice]
-
-            # Cambiar el costo de compra si se proporciona uno nuevo
+             
+            #Modifica el tipo de alimento en caso de no estar vacio
+            if nuevo_tipo is not None:
+                alimento['tipo'] = nuevo_tipo
+            #Mofidica el costo de compra en caso de no estar vacio
             if nuevo_costo_compra is not None:
                 alimento['costo_compra'] = nuevo_costo_compra
-
-            # Cambiar el margen de ganancia si se proporciona uno nuevo
+            #Modifica el margen de ganancia en caso de no estar vacio
             if nuevo_margen_ganancia is not None:
                 if nuevo_margen_ganancia < 0 or nuevo_margen_ganancia > 100:
                     print("Error: El margen de ganancia debe estar entre 0 y 100.")
                     return
                 alimento['margen_ganancia'] = nuevo_margen_ganancia
-
-            # Recalcular el precio de venta
+            #Modifica como quedaran los nuevos margenes y precios
             alimento['precio_venta'] = alimento['costo_compra'] * (1 + alimento['margen_ganancia'] / 100)
-
-            # Guardar los cambios
+            #Busca el nombre para imprimirlo en pantalla e indicar la modificacion
             db_alimentos[nombre] = alimento
             print(f"Alimento '{nombre}' modificado con éxito.")
 
+
+#Funcion para mostrar alimentos guardados
     def mostrar_alimentos(self):
+        #con shelve se abre el archivo de la base de datos db_alimentos para hacer la consulta
         with shelve.open(self.db_name) as db_alimentos:
+            #En caso de no haber nada aun
             if not db_alimentos:
                 print("No hay alimentos registrados.")
+            #En caso de haber
             else:
                 print("\nAlimentos registrados:")
+                #Itera por lo datos que tiene guardados
                 for nombre, datos in db_alimentos.items():
                     print(f"- {nombre}: Tipo: {datos['tipo']}, Costo de compra: {datos['costo_compra']} colones, "
+                          #Imprime cada iteracion de dato guardado por alimento
                           f"Margen de ganancia: {datos['margen_ganancia']}%, Precio de venta: {datos['precio_venta']} colones")
 
+#verificar si el alimento está asociado a un combo, orden o factura
     def alimento_asociado(self, nombre):
-        # Simular que no hay alimentos asociados para este ejemplo
-        # En un proyecto real, deberías verificar si este alimento está asociado a un combo, orden o factura
-        return False
+        return False 
 
-# Ejemplo de uso del sistema
-gestion_alimento = GestionAlimento()
+# funcion para mostrar el menu de alimento
+def menu_alimento():
+    gestion_alimento = GestionAlimento()
 
-# Suponiendo que ya tienes algunos tipos de alimentos en 'tipos_alimentos.db'
-gestion_alimento.mostrar_alimentos()
+    while True:
+        print("\n--- Menú de Gestión de Alimentos ---")
+        print("1. Incluir Alimento")
+        print("2. Eliminar Alimento")
+        print("3. Modificar Alimento")
+        print("4. Mostrar Alimentos")
+        print("5. Volver al Menú Administrativo")
 
-# Incluir nuevos alimentos (se asume que los tipos de alimentos ya están creados)
-gestion_alimento.incluir_alimento("Manzana", 0, 100, 20)
-gestion_alimento.incluir_alimento("Pan", 1, 50, 30)
+        opcion = input("Seleccione una opción: ")
 
-# Modificar un alimento
-gestion_alimento.modificar_alimento("Manzana", nuevo_margen_ganancia=25)
+        if opcion == "1":
+            nombre = input("Ingrese el nombre del alimento: ")
+            tipo = input("Ingrese el tipo de alimento: ")
+            costo_compra = float(input("Ingrese el costo de compra: "))
+            margen_ganancia = float(input("Ingrese el margen de ganancia (en %): "))
+            gestion_alimento.incluir_alimento(nombre, tipo, costo_compra, margen_ganancia)
 
-# Mostrar todos los alimentos
-gestion_alimento.mostrar_alimentos()
+        elif opcion == "2":
+            nombre = input("Ingrese el nombre del alimento a eliminar: ")
+            gestion_alimento.eliminar_alimento(nombre)
 
-# Eliminar un alimento
-gestion_alimento.eliminar_alimento("Pan")
+        elif opcion == "3":
+            nombre = input("Ingrese el nombre del alimento a modificar: ")
+            nuevo_tipo = input("Ingrese el nuevo tipo de alimento (deje en blanco si no desea cambiar): ")
+            nuevo_tipo = nuevo_tipo if nuevo_tipo else None
+            nuevo_costo_compra = input("Ingrese el nuevo costo de compra (deje en blanco si no desea cambiar): ")
+            nuevo_costo_compra = float(nuevo_costo_compra) if nuevo_costo_compra else None
+            nuevo_margen_ganancia = input("Ingrese el nuevo margen de ganancia (en %, deje en blanco si no desea cambiar): ")
+            nuevo_margen_ganancia = float(nuevo_margen_ganancia) if nuevo_margen_ganancia else None
+            gestion_alimento.modificar_alimento(nombre, nuevo_tipo, nuevo_costo_compra, nuevo_margen_ganancia)
 
-# Mostrar nuevamente los alimentos
-gestion_alimento.mostrar_alimentos()
+        elif opcion == "4":
+            gestion_alimento.mostrar_alimentos()
+
+        elif opcion == "5":
+            print("Volviendo al Menú Administrativo...")
+            break
+
+        else:
+            print("Opción no válida, intente de nuevo.")
+
+# Iniciar el menú
+if __name__ == "__main__":
+    menu_alimento()
