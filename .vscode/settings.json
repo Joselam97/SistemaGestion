@@ -1,0 +1,6 @@
+{
+    "python.analysis.extraPaths": [
+        "./Sistema de Gestion/Opciones Administrativas",
+        "./Sistema de Gestion/Menu Principal"
+    ]
+}

@@ -1,0 +1,28 @@
+html{ /*Esto sirve para que el color del gradiente no se repita 
+    Y se extienda lo largo de la pantalla*/
+    height: auto;
+    min-height: 100%;
+}
+
+body{ /*Esto es para poner un color gradiente en el cuerpo de la pagina*/
+   /* background: linear-gradient(#f72585, #3a0ca3); /*Lo genera de arriba a abajo*/
+  /* background: linear-gradient(to right,#f72585, #3a0ca3); /*Lo genera de izquiera a derecha*/
+    /* background: linear-gradient(#24404d, #6dbff1, black);  */
+     /*background: linear-gradient(to bottom right, #24404d, #6dbff1, black); /*diagonal*/
+   /*  background: linear-gradient(145deg,#24404d, #6dbff1, black ); /*diagonal con un angulo 145*/
+   background: radial-gradient(circle, #0d47a1,#42a5f5, orange); /*gradiente circular*/
+  color: #f1faee;
+   
+}
+
+h1{
+    text-align: center;
+}
+
+div.contenedor{
+    width: 30%;
+    height: 20%;
+    margin: auto;
+    border: 3px solid #a8dadc;
+    text-align: center;
+}

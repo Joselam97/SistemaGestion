@@ -1,0 +1,43 @@
+h1{
+    text-align: center;
+    color: rgb(123, 20, 220);
+}
+
+div.contenedor{
+    border: 3px dashed darkkhaki;
+    width: 80%;
+    height: 20%; /*El overflow funciona SIEMPRE que utilicemos Height*/
+    overflow: auto; /*Se recorre por medio de scroll pero no se muestre la barra scroll horizontal*/
+   /* float: left; /*Ordena los elementos en la misma linea de izquera a derecha*/
+   margin: auto; /*Centra los elementos*/
+
+}
+
+span{
+    font-weight: bolder; /*forma de la letra*/
+    font-style: italic; /*estilo*/
+    font-size: larger; /*tama;o de la letra*/
+    background-color: #a8dadc;
+    border: 1px solid #457b9d;
+    height: 50px; /*altura del borde*/
+    padding: 5px; /*ancho del borde*/
+    display: inline-block; /*crea un block y las demas letras respetan el bloque y se comporta como un inline, o sea en la misma linea del parrafo completo*/
+}
+
+.menu{
+    list-style: none; /*List-style es para manejar las vi;etas*/
+    text-align: center;
+}
+
+.menu li{
+    display: inline-block; /*Display muestra los elementos de la lista, en este caso en una linea horizontal y respetan el padding ya que es inline BLOCK*/
+    padding: 15px;
+    margin: 20px; /*mueve los elementos a 20px de distancia entre ellos*/
+    background-color: #e63946;
+    border-radius: 5px;
+}
+
+a{
+    text-decoration: none; /*Elimina el underline del link*/
+    color: thistle;
+}

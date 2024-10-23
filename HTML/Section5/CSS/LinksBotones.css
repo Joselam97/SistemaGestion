@@ -1,0 +1,16 @@
+h1 {
+    color: rgb(50, 20, 219);
+}
+
+a:link, a:visited {  /* Esto es para el boton de link */
+    background-color: darkmagenta;
+    color: beige;
+    padding: 15px 25px; /* Recordar que esto es el boton como tal */
+    text-align: center;
+    text-decoration: none;
+    display: inline-block; /* Esto es para que los elementos no se pongan encima del otro */
+}
+
+a:hover, a:active {
+    background-color: rgb(231, 144, 144);
+}

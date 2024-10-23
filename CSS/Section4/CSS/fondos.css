@@ -1,0 +1,14 @@
+body{
+    background-color: dodgerblue;
+    color: cornsilk;
+    background-image: url("/CSS/Section4/img/fondo.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+    background-size: cover; /*la imagen cubre todo el fondo*/
+}
+
+h1{
+    text-align: center;
+    background-color: dodgerblue;
+}

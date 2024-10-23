@@ -7,22 +7,25 @@ class GestionAlimento:
 
 #Funcion para incluir alimento
     def incluir_alimento(self, nombre, tipo, costo_compra, margen_ganancia):
-        #con shelve se abre el archivo de la base de datos db_alimentos para hacer la consulta
+        #guarda cada combo en la base de datos 'db_name' con en una variable llamada 'db_alimentos'
         with shelve.open(self.db_name) as db_alimentos:
             
             #Verifica si ya esta incluido en shelve
             if nombre in db_alimentos:
                 print(f"Error: Ya existe un alimento con el nombre '{nombre}'.")
+                #regresa debido al error
                 return
             
             #En caso contrario, se agrega el margen de ganancia que debe estar en un rango de 0 a 100
             if margen_ganancia < 0 or margen_ganancia > 100:
                 print("Error: El margen de ganancia debe estar entre 0 y 100.")
+                #regresa debido al error
                 return
+            
             #convierte en fraccion el margen de ganancia y le suma 1, para obtener un 'double' y multiplicarlo al costo de compra
             #Ejemplo: 400 * (1 + 0.2 / 100) = 400 * (1.2) = 480 
             precio_venta = costo_compra * (1 + margen_ganancia / 100)
-            #diccionario de la informacion del alimento para sacar sus margenes y precios
+            #diccionario de la informacion del alimento para guardar en 'db_alimentos'
             db_alimentos[nombre] = {
                 'tipo': tipo,
                 'costo_compra': costo_compra,
@@ -99,7 +102,7 @@ class GestionAlimento:
     def alimento_asociado(self, nombre):
         return False 
 
-# funcion para mostrar el menu de alimento
+#funcion para mostrar el menu de alimento
 def menu_alimento():
     gestion_alimento = GestionAlimento()
 

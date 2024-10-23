@@ -1,0 +1,19 @@
+h1,div,p{
+    border: 3px solid blueviolet;
+    text-align: center;
+    color: cornflowerblue;
+    padding: 10px;
+    display: block; /*se muestran los elementos en blocks hacia abajo*/
+    /*display: inline-block; /*se muestran los elementos en blocks horizontales*/
+}
+
+span{
+    display: inline;
+    border: 2px solid red;
+}
+
+a{
+    display: block; /*alinea de forma vertical*/
+    /*display: inline; /*alinea de forma horizontal*/
+    text-align: right; /*alinea a la derecha*/
+}
