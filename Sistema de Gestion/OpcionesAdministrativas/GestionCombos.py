@@ -5,7 +5,7 @@ class GestionCombo:
     #db_name es la variable que alamacena el nombre del archivo en la base de datos
     def __init__(self, db_name='combos.db', gestion_alimento=None):
         self.db_name = db_name
-        self.gestion_alimento = gestion_alimento
+        self.gestion_alimento = gestion_alimento  
 
 
 #funcion para incluir combo, solicitando nombre,costo,margen_ganancia y alimentos
@@ -35,6 +35,12 @@ class GestionCombo:
             print(f"Combo '{nombre}' agregado con éxito.")
 
 
+
+    def existe_combo(self, nombre):
+        with shelve.open(self.db_name) as db_combos:
+            return nombre in db_combos  
+        
+
 #funcion para eliminar combos en funcion de su nombre
     def eliminar_combo(self, nombre):
         with shelve.open(self.db_name) as db_combos:
@@ -56,38 +62,50 @@ class GestionCombo:
 #funcion para modificar combo, en caso de existir el nombre, nuevos costos, margen_ganancia y alimentos no sean null
     def modificar_combo(self, nombre, nuevo_costo=None, nuevo_margen_ganancia=None, nuevos_alimentos=None):
         with shelve.open(self.db_name) as db_combos:
-            
-            #en caso de no existir el nombre del combo, da error
             if nombre not in db_combos:
                 print(f"Error: El combo '{nombre}' no existe.")
-                #regresa debido al error
                 return
-            
-            #'combo' lo asocia a algun nombre de combo en 'db_combos'
+        
             combo = db_combos[nombre]
 
-            #si se ingresa un nuevo costo, lo modifica
+            # Modificación del costo
             if nuevo_costo is not None:
-                combo['costo'] = nuevo_costo
-
-            #si se ingresa un nuevo margen_ganancia, lo modifica
-            if nuevo_margen_ganancia is not None:
-                #solicita que el margen este entre el rango para que no de error
-                if nuevo_margen_ganancia < 0 or nuevo_margen_ganancia > 100:
-                    print("Error: El margen de ganancia debe estar entre 0 y 100.")
-                    #regresa debido al error
+                try:
+                    nuevo_costo = float(nuevo_costo) if nuevo_costo is not None else combo['costo']
+                    combo['costo'] = nuevo_costo
+                except ValueError:
+                    print("Error: El costo debe ser un número.")
                     return
-                
-                #modifica el margen de ganancia
-                combo['margen_ganancia'] = nuevo_margen_ganancia
-                
-            #si se ingresa un alimento lo agrega    
-            if nuevos_alimentos is not None:
-                combo['alimentos'] = nuevos_alimentos
 
-            #Actualiza el combo con la nueva informacion brindada
-            combo['precio_venta'] = combo['costo'] * (1 + combo['margen_ganancia'] / 100)
-            #agrega informacion actualizada a 'db_combos' donde el nombre del combo coincide con el que se ingreso
+            # Modificación del margen de ganancia
+            if nuevo_margen_ganancia is not None:
+                try:
+                    nuevo_margen_ganancia = float(nuevo_margen_ganancia)
+                    if nuevo_margen_ganancia < 0 or nuevo_margen_ganancia > 100:
+                        print("Error: El margen de ganancia debe estar entre 0 y 100.")
+                        return
+                    combo['margen_ganancia'] = nuevo_margen_ganancia
+                except ValueError:
+                    print("Error: El margen de ganancia debe ser un número.")
+                    return
+
+            # Modificación de alimentos utilizando el diccionario nuevos_alimentos pasado como parámetro
+            if nuevos_alimentos:
+                for alimento, cantidad in nuevos_alimentos.items():
+                    if cantidad < 0:
+                        print(f"Error: La cantidad para el alimento '{alimento}' debe ser un número positivo.")
+                        return
+                    if alimento in combo['alimentos']:
+                        combo['alimentos'][alimento] = cantidad
+                    else:
+                        print(f"Error: El alimento '{alimento}' no está en el combo.")
+                        return
+
+            # Actualizar el precio de venta si el costo y margen existen
+            if 'costo' in combo and 'margen_ganancia' in combo:
+                combo['precio_venta'] = combo['costo'] * (1 + combo['margen_ganancia'] / 100)
+
+            # Almacenar el combo modificado en la base de datos
             db_combos[nombre] = combo
             print(f"Combo '{nombre}' modificado con éxito.")
 
@@ -130,50 +148,119 @@ def menu_combo(gestion_alimento):
         opcion = input("Seleccione una opción: ")
 
         if opcion == "1":
-            nombre = input("Ingrese el nombre del combo: ")
-            costo = float(input("Ingrese el costo del combo: "))
-            margen_ganancia = float(input("Ingrese el margen de ganancia (en %): "))
-            
-            #importa funcion 'mostrar_alimentos' de GestionAlimento para mostrar alimentos disponibles anteriormente guardados
-            gestion_alimento.mostrar_alimentos()
-            alimentos = {} #diccionario para guardar alimentos
+            nombre = input("Ingrese el nombre del combo: ").strip()
+    
+    # Validación del costo
             while True:
-                #itera cada vez para ingresar un alimento guardado hasta que se escriba 'terminar'
-                nombre_alimento = input("Ingrese el nombre del alimento a incluir en el combo (o 'terminar'): ")
-                #permite escribir 'terminar' sin importar el tipo de case
+                costo_input = input("Ingrese el costo del combo: ").strip()
+                try:
+                    costo = float(costo_input)
+                    if costo < 0:
+                        print("Error: El costo no puede ser negativo. Inténtelo nuevamente.")
+                        continue
+                    break  # Salir del bucle si la entrada es válida
+                except ValueError:
+                    print("Error: Por favor, ingrese un valor numérico válido para el costo.")
+    
+    # Validación del margen de ganancia
+            while True:
+                margen_input = input("Ingrese el margen de ganancia (en %): ").strip()
+                try:
+                    margen_ganancia = float(margen_input)
+                    if margen_ganancia < 0 or margen_ganancia > 100:
+                        print("Error: El margen de ganancia debe estar entre 0 y 100. Inténtelo nuevamente.")
+                        continue
+                    break  # Salir del bucle si la entrada es válida
+                except ValueError:
+                    print("Error: Por favor, ingrese un valor numérico válido para el margen de ganancia.")
+
+    # Mostrar alimentos disponibles
+            gestion_alimento.mostrar_alimentos()
+    
+            alimentos = {}
+            while True:
+                nombre_alimento = input("Ingrese el nombre del alimento a incluir en el combo (o 'terminar'): ").strip()
                 if nombre_alimento.lower() == 'terminar':
-                    #sale del loop
                     break
-                cantidad = int(input(f"Ingrese la cantidad de '{nombre_alimento}' a incluir: "))
+        # Validación de la cantidad de alimentos
+                while True:
+                    cantidad_input = input(f"Ingrese la cantidad de '{nombre_alimento}' a incluir: ").strip()
+                    try:
+                        cantidad = int(cantidad_input)
+                        if cantidad < 0:
+                            print("Error: La cantidad no puede ser negativa. Inténtelo nuevamente.")
+                            continue
+                        break  # Salir del bucle si la entrada es válida
+                    except ValueError:
+                        print("Error: Por favor, ingrese un valor numérico válido para la cantidad.")
+
                 alimentos[nombre_alimento] = cantidad
-            
-            #incluye a la variable 'gestion_combo' asociada a la clase 'GestionCombo' el combo con los datos brindados por medio de la funcion 'incluir_combo' 
+    
+    # Llamada a la función para incluir el combo
             gestion_combo.incluir_combo(nombre, costo, margen_ganancia, alimentos)
+            
 
         elif opcion == "2":
             nombre = input("Ingrese el nombre del combo a eliminar: ")
             gestion_combo.eliminar_combo(nombre)
 
         elif opcion == "3":
+            gestion_combo.mostrar_combos()
+            print("\n --- Combos registrados --- \n")
             nombre = input("Ingrese el nombre del combo a modificar: ")
-            nuevo_costo = input("Ingrese el nuevo costo (deje en blanco si no desea cambiar): ")
-            #convierte el nuevo costo a float en caso de modificarlo sino, no lo modifica
-            nuevo_costo = float(nuevo_costo) if nuevo_costo else None
+            if not gestion_combo.existe_combo(nombre):
+                print("Error: El combo no está registrado. Por favor, inténtelo nuevamente.")
+                continue
             
-            nuevo_margen_ganancia = input("Ingrese el nuevo margen de ganancia (en %, deje en blanco si no desea cambiar): ")
-            nuevo_margen_ganancia = float(nuevo_margen_ganancia) if nuevo_margen_ganancia else None
+            nuevo_costo = None
+            while nuevo_costo is None:
+                nuevo_costo_input = input("Ingrese el nuevo costo (escriba 'no' si desea dejarlo igual): ")
+                if nuevo_costo_input.strip().lower() == "no":
+                    nuevo_costo = None
+                    break
+                else:
+                    try:
+                        nuevo_costo = float(nuevo_costo_input)
+                    except ValueError:
+                        print("Error: Por favor, ingrese un valor numérico válido para el costo.")
+
+            nuevo_margen_ganancia = None
+            while nuevo_margen_ganancia is None:
+                nuevo_margen_ganancia_input = input("Ingrese el nuevo margen de ganancia en % (escriba 'no' si desea dejarlo igual): ")
+                if nuevo_margen_ganancia_input.strip().lower() == "no":
+                    nuevo_margen_ganancia = None
+                    break
+                else:
+                    try:
+                        nuevo_margen_ganancia = float(nuevo_margen_ganancia_input)
+                        if nuevo_margen_ganancia < 0 or nuevo_margen_ganancia > 100:
+                            print("Error: El margen de ganancia debe estar entre 0 y 100.")
+                            nuevo_margen_ganancia = None
+                    except ValueError:
+                        print("Error: Por favor, ingrese un valor numérico válido para el margen de ganancia.")
+
+            nuevos_alimentos = {}
             
-            nuevos_alimentos = {} #diccionario para guardar alimentos nuevos
-            gestion_combo.mostrar_combos()  #muestra los combos actuales para referencia
             while True:
                 nombre_alimento = input("Ingrese el nombre del alimento a modificar en el combo (o 'terminar'): ")
                 if nombre_alimento.lower() == 'terminar':
                     break
-                cantidad = int(input(f"Ingrese la nueva cantidad de '{nombre_alimento}': "))
+                if not nombre_alimento.isalnum() or not nombre_alimento.strip():
+                    print("Error: El nombre del alimento debe ser alfanumérico y no debe estar vacío.")
+                    continue
+                
+                try:
+                    cantidad = int(input(f"Ingrese la nueva cantidad de '{nombre_alimento}': "))
+                    if cantidad < 0:
+                        print("Error: La cantidad debe ser un número entero positivo.")
+                        continue
+                except ValueError:
+                    print("Error: Por favor, ingrese un valor numérico válido para la cantidad.")
+                    continue
+
                 nuevos_alimentos[nombre_alimento] = cantidad
             
-            #modifica el combo con la info brindada usando la variable y llamando a la funcion
-            gestion_combo.modificar_combo(nombre, nuevo_costo, nuevo_margen_ganancia, nuevos_alimentos) 
+            gestion_combo.modificar_combo(nombre, nuevo_costo, nuevo_margen_ganancia, nuevos_alimentos)
 
         elif opcion == "4":
             #muestra los combos guardados

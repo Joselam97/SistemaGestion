@@ -4,6 +4,11 @@ class GestionTipoAlimento:
     #db_name es la variable que alamacena el nombre del archivo en la base de datos
     def __init__(self, db_name='tipos_alimentos.db'):
         self.db_name = db_name
+        
+    def existe_tipo(self, tipo):
+        with shelve.open(self.db_name) as db:
+            return tipo in db
+
 
 #Funcion para incluir tipo
     def incluir_tipo(self, descripcion, origen, libre_gluten):
@@ -78,6 +83,10 @@ class GestionTipoAlimento:
                     print(f"- {descripcion}: Origen: {origen}, Libre de gluten: {libre_gluten}")
 
     def alimento_asociado(self, descripcion): #verifica si el tipo de alimento esta asociado a algun alimento
+        with shelve.open('alimentos.db') as db_alimentos:
+            for alimento in db_alimentos.values():
+                if alimento['tipo'] == descripcion:
+                    return True
         return False
 
 #funcion para mostrar el menu de GestionTipoAlimento
@@ -92,20 +101,24 @@ def menu_tipo_alimento():
         print("4. Mostrar tipos de alimentos")
         print("5. Volver al Menu Administrativo")
         
-        opcion = input("Elija una opción: ")
+        opcion = input("Elija una opcion: ")
 
         if opcion == "1":
-            descripcion = input("Ingrese la descripción: ")
+            descripcion = input("Ingrese la descripcion: ")
             origen = input("Ingrese el origen: ")
-            libre_gluten = input("¿Es libre de gluten? (sí/no): ").lower() == 'sí'
+            libre_gluten = input("¿Es libre de gluten? (si/no): ").lower() == 'si'
             gestion.incluir_tipo(descripcion, origen, libre_gluten)
 
         elif opcion == "2":
-            descripcion = input("Ingrese la descripción del tipo de alimento a eliminar: ")
+            print("\n --- Tipos de alimentos registrados --- ")
+            gestion.mostrar_tipos()
+            descripcion = input("\nIngrese la descripción del tipo de alimento a eliminar: ")
             gestion.eliminar_tipo(descripcion)
 
         elif opcion == "3":
-            descripcion = input("Ingrese la descripción del tipo de alimento a modificar: ")
+            print("\n --- Tipos de alimentos registrados --- ")
+            gestion.mostrar_tipos()
+            descripcion = input("\nIngrese la descripción del tipo de alimento a modificar: ")
             nuevo_origen = input("Ingrese el nuevo origen (dejar en blanco si no desea cambiar): ") or None
             libre_gluten_input = input("¿Es libre de gluten? (si/no, deje en blanco si no desea cambiar): ")
             nuevo_libre_gluten = None if libre_gluten_input == 'no' else libre_gluten_input.lower() == 'si'
@@ -119,8 +132,7 @@ def menu_tipo_alimento():
             break
 
         else:
-            print("Opción no válida, intente de nuevo.")
+            print("Opción no valida, intente de nuevo.")
 
-# Iniciar el menú
-menu_tipo_alimento()
-
+if __name__ == "__main__":
+    menu_tipo_alimento()

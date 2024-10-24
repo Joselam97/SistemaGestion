@@ -1,12 +1,20 @@
  # Importa la clase que gestiona tipos de alimentosimport shelve
 import shelve
+from GestionTipoAlimento import GestionTipoAlimento
 class GestionAlimento:
     #db_name es la variable que alamacena el nombre del archivo en la base de datos
-    def __init__(self, db_name='alimentos.db'):
+    def __init__(self, db_name='alimentos.db', tipo_alimento_db_name='tipos_alimentos.db'):
         self.db_name = db_name
+        self.tipo_alimento_db_name = tipo_alimento_db_name
 
 #Funcion para incluir alimento
     def incluir_alimento(self, nombre, tipo, costo_compra, margen_ganancia):
+        
+        with shelve.open(self.tipo_alimento_db_name) as db_tipos:
+            if tipo not in db_tipos:
+                print(f"Error: El tipo de alimento '{tipo}' no existe.")
+                return
+        
         #guarda cada combo en la base de datos 'db_name' con en una variable llamada 'db_alimentos'
         with shelve.open(self.db_name) as db_alimentos:
             
@@ -65,6 +73,10 @@ class GestionAlimento:
              
             #Modifica el tipo de alimento en caso de no estar vacio
             if nuevo_tipo is not None:
+                with shelve.open(self.tipo_alimento_db_name) as db_tipos:
+                   if nuevo_tipo not in db_tipos:
+                        print(f"Error: El tipo de alimento '{nuevo_tipo}' no existe.")
+                        return
                 alimento['tipo'] = nuevo_tipo
             #Mofidica el costo de compra en caso de no estar vacio
             if nuevo_costo_compra is not None:
@@ -105,6 +117,7 @@ class GestionAlimento:
 #funcion para mostrar el menu de alimento
 def menu_alimento():
     gestion_alimento = GestionAlimento()
+    gestion_tipo_alimento = GestionTipoAlimento()
 
     while True:
         print("\n--- Menú de Gestión de Alimentos ---")
@@ -117,10 +130,43 @@ def menu_alimento():
         opcion = input("Seleccione una opción: ")
 
         if opcion == "1":
+            #muestra tipos de alimentos disponibles
+            print("\n--- Tipos de Alimentos Disponibles ---")
+            gestion_tipo_alimento.mostrar_tipos()
+            
+            while True:
+                tipo = input("Ingrese el tipo de alimento (o 'fin' para cancelar): ")
+
+                if tipo.lower() == 'fin':
+                    print("Operación cancelada. Volviendo al menu de gestión de alimentos.")
+                    break
+                
+                if gestion_tipo_alimento.existe_tipo(tipo):
+                    break  # Salir del bucle si el tipo es válido
+                else:
+                    print(f"Advertencia: El tipo de alimento '{tipo}' no existe en la lista de tipos de alimentos. Intente de nuevo.")
+
+            # Si se canceló la operación, continuar al siguiente ciclo
+            if tipo.lower() == 'fin':
+                continue
+            
             nombre = input("Ingrese el nombre del alimento: ")
-            tipo = input("Ingrese el tipo de alimento: ")
-            costo_compra = float(input("Ingrese el costo de compra: "))
-            margen_ganancia = float(input("Ingrese el margen de ganancia (en %): "))
+            
+            # Validación para costo de compra
+            while True:
+                try:
+                    costo_compra = float(input("Ingrese el costo de compra: "))
+                    break  # Salir del bucle si la conversión fue exitosa
+                except ValueError:
+                    print("El costo de compra debe ser un número. Inténtalo de nuevo.")
+
+            # Validación para margen de ganancia
+            while True:
+                try:
+                    margen_ganancia = float(input("Ingrese el margen de ganancia (en %): "))
+                    break  # Salir del bucle si la conversión fue exitosa
+                except ValueError:
+                    print("El margen de ganancia debe ser un número. Inténtalo de nuevo.")
             gestion_alimento.incluir_alimento(nombre, tipo, costo_compra, margen_ganancia)
 
         elif opcion == "2":
