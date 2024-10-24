@@ -151,7 +151,7 @@ def menu_alimento():
         print("4. Mostrar Alimentos")
         print("5. Volver al Menú Administrativo")
 
-        opcion = input("Seleccione una opción: ")
+        opcion = input("Seleccione una opcion: ")
 
         if opcion == "1":
             #muestra tipos de alimentos disponibles

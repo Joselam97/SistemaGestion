@@ -116,7 +116,7 @@ def menu_tipo_alimento():
         print("4. Mostrar tipos de alimentos")
         print("5. Volver al Menu Administrativo")
         
-        opcion = input("Elija una opcion: ")
+        opcion = input("Seleccione una opcion: ")
 
         if opcion == "1":
             descripcion = input("Ingrese la descripcion: ")

@@ -77,7 +77,7 @@ class GestionCombo:
                     print("Error: El costo debe ser un número.")
                     return
 
-            # Modificación del margen de ganancia
+            #agrega nuevo margen de ganancia despues de la modificaion
             if nuevo_margen_ganancia is not None:
                 try:
                     nuevo_margen_ganancia = float(nuevo_margen_ganancia)
@@ -85,27 +85,30 @@ class GestionCombo:
                         print("Error: El margen de ganancia debe estar entre 0 y 100.")
                         return
                     combo['margen_ganancia'] = nuevo_margen_ganancia
+                #maneja el error de tipo de dato, solo permite integers
                 except ValueError:
-                    print("Error: El margen de ganancia debe ser un número.")
+                    print("Error: El margen de ganancia debe ser un numero.")
                     return
 
-            # Modificación de alimentos utilizando el diccionario nuevos_alimentos pasado como parámetro
+            #modifica la cantidad de alimento escogido
             if nuevos_alimentos:
                 for alimento, cantidad in nuevos_alimentos.items():
+                    #pide que sea un numero mayor a 0
                     if cantidad < 0:
                         print(f"Error: La cantidad para el alimento '{alimento}' debe ser un número positivo.")
                         return
+                    #si el alimento se encuentra en el combo lo agrega
                     if alimento in combo['alimentos']:
                         combo['alimentos'][alimento] = cantidad
                     else:
                         print(f"Error: El alimento '{alimento}' no está en el combo.")
                         return
 
-            # Actualizar el precio de venta si el costo y margen existen
+            #modifica el precio de venta si el costo y margen existen
             if 'costo' in combo and 'margen_ganancia' in combo:
                 combo['precio_venta'] = combo['costo'] * (1 + combo['margen_ganancia'] / 100)
 
-            # Almacenar el combo modificado en la base de datos
+            #guarda el combo modificado en la base de datos
             db_combos[nombre] = combo
             print(f"Combo '{nombre}' modificado con éxito.")
 
@@ -145,36 +148,38 @@ def menu_combo(gestion_alimento):
         print("4. Mostrar Combos")
         print("5. Volver al Menu Administrativo")
 
-        opcion = input("Seleccione una opción: ")
+        opcion = input("Seleccione una opcion: ")
 
         if opcion == "1":
             nombre = input("Ingrese el nombre del combo: ").strip()
     
-    # Validación del costo
+    
+#COMENZAR COMENTARIOS A PARTIR DE ACA
+    
             while True:
                 costo_input = input("Ingrese el costo del combo: ").strip()
                 try:
                     costo = float(costo_input)
                     if costo < 0:
-                        print("Error: El costo no puede ser negativo. Inténtelo nuevamente.")
+                        print("Error: El costo no puede ser negativo. Intentelo nuevamente.")
                         continue
-                    break  # Salir del bucle si la entrada es válida
+                    break  
                 except ValueError:
-                    print("Error: Por favor, ingrese un valor numérico válido para el costo.")
+                    print("Error: Por favor, ingrese un valor numérico valido para el costo.")
     
-    # Validación del margen de ganancia
+    
             while True:
                 margen_input = input("Ingrese el margen de ganancia (en %): ").strip()
                 try:
                     margen_ganancia = float(margen_input)
                     if margen_ganancia < 0 or margen_ganancia > 100:
-                        print("Error: El margen de ganancia debe estar entre 0 y 100. Inténtelo nuevamente.")
+                        print("Error: El margen de ganancia debe estar entre 0 y 100. Intentelo nuevamente.")
                         continue
-                    break  # Salir del bucle si la entrada es válida
+                    break  
                 except ValueError:
-                    print("Error: Por favor, ingrese un valor numérico válido para el margen de ganancia.")
+                    print("Error: Por favor, ingrese un valor numerico válido para el margen de ganancia.")
 
-    # Mostrar alimentos disponibles
+    
             gestion_alimento.mostrar_alimentos()
     
             alimentos = {}
@@ -182,21 +187,21 @@ def menu_combo(gestion_alimento):
                 nombre_alimento = input("Ingrese el nombre del alimento a incluir en el combo (o 'terminar'): ").strip()
                 if nombre_alimento.lower() == 'terminar':
                     break
-        # Validación de la cantidad de alimentos
+        
                 while True:
                     cantidad_input = input(f"Ingrese la cantidad de '{nombre_alimento}' a incluir: ").strip()
                     try:
                         cantidad = int(cantidad_input)
                         if cantidad < 0:
-                            print("Error: La cantidad no puede ser negativa. Inténtelo nuevamente.")
+                            print("Error: La cantidad no puede ser negativa. Intentelo nuevamente.")
                             continue
-                        break  # Salir del bucle si la entrada es válida
+                        break  
                     except ValueError:
-                        print("Error: Por favor, ingrese un valor numérico válido para la cantidad.")
+                        print("Error: Por favor, ingrese un valor numérico valido para la cantidad.")
 
                 alimentos[nombre_alimento] = cantidad
     
-    # Llamada a la función para incluir el combo
+    
             gestion_combo.incluir_combo(nombre, costo, margen_ganancia, alimentos)
             
 
@@ -209,7 +214,7 @@ def menu_combo(gestion_alimento):
             print("\n --- Combos registrados --- \n")
             nombre = input("Ingrese el nombre del combo a modificar: ")
             if not gestion_combo.existe_combo(nombre):
-                print("Error: El combo no está registrado. Por favor, inténtelo nuevamente.")
+                print("Error: El combo no esta registrado. Por favor, intentelo nuevamente.")
                 continue
             
             nuevo_costo = None
@@ -222,7 +227,7 @@ def menu_combo(gestion_alimento):
                     try:
                         nuevo_costo = float(nuevo_costo_input)
                     except ValueError:
-                        print("Error: Por favor, ingrese un valor numérico válido para el costo.")
+                        print("Error: Por favor, ingrese un valor numerico válido para el costo.")
 
             nuevo_margen_ganancia = None
             while nuevo_margen_ganancia is None:
@@ -237,7 +242,7 @@ def menu_combo(gestion_alimento):
                             print("Error: El margen de ganancia debe estar entre 0 y 100.")
                             nuevo_margen_ganancia = None
                     except ValueError:
-                        print("Error: Por favor, ingrese un valor numérico válido para el margen de ganancia.")
+                        print("Error: Por favor, ingrese un valor numerico válido para el margen de ganancia.")
 
             nuevos_alimentos = {}
             
@@ -246,16 +251,16 @@ def menu_combo(gestion_alimento):
                 if nombre_alimento.lower() == 'terminar':
                     break
                 if not nombre_alimento.isalnum() or not nombre_alimento.strip():
-                    print("Error: El nombre del alimento debe ser alfanumérico y no debe estar vacío.")
+                    print("Error: El nombre del alimento debe ser alfanumerico y no debe estar vacio.")
                     continue
                 
                 try:
                     cantidad = int(input(f"Ingrese la nueva cantidad de '{nombre_alimento}': "))
                     if cantidad < 0:
-                        print("Error: La cantidad debe ser un número entero positivo.")
+                        print("Error: La cantidad debe ser un numero entero positivo.")
                         continue
                 except ValueError:
-                    print("Error: Por favor, ingrese un valor numérico válido para la cantidad.")
+                    print("Error: Por favor, ingrese un valor numerico válido para la cantidad.")
                     continue
 
                 nuevos_alimentos[nombre_alimento] = cantidad
@@ -273,9 +278,9 @@ def menu_combo(gestion_alimento):
         else:
             print("Opción no válida, intente de nuevo.")
 
-# Iniciar el menú
+#inicia el menu
 if __name__ == "__main__":
-      # Asegúrate de tener importada la clase correspondiente
+      
 
 #gestion_alimento es la variable que almacena la clase 'GestionAlimento' para usarla e importar datos
     gestion_alimento = GestionAlimento()
