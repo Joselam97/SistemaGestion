@@ -132,6 +132,8 @@ class GestionAlimento:
                           #Imprime cada iteracion de dato guardado por alimento
                           f"Margen de ganancia: {datos['margen_ganancia']}%, Precio de venta: {datos['precio_venta']} colones")
 
+
+
 #verificar si el alimento está asociado a un combo, orden o factura
     def alimento_asociado(self, nombre):
         return False 

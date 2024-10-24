@@ -82,6 +82,21 @@ class GestionTipoAlimento:
                     #imprime cada iteracion de datos guardados de tipo de alimento
                     print(f"- {descripcion}: Origen: {origen}, Libre de gluten: {libre_gluten}")
 
+
+    #funcion para filtrar por origen en ConsultaAlimentos
+    def filtrar_por_origen(self, origen_filtro):
+        with shelve.open(self.db_name) as db:
+            print(f"\nTipos de alimentos con origen '{origen_filtro}':")
+            encontrados = False
+            for descripcion, datos in db.items():
+                if datos['origen'].lower() == origen_filtro.lower():
+                    libre_gluten = 'sí' if datos['libre_gluten'] else 'no'
+                    print(f"- {descripcion}: Libre de gluten: {libre_gluten}")
+                    encontrados = True
+            if not encontrados:
+                print(f"No se encontraron alimentos de origen '{origen_filtro}'.")
+                
+
     def alimento_asociado(self, descripcion): #verifica si el tipo de alimento esta asociado a algun alimento
         with shelve.open('alimentos.db') as db_alimentos:
             for alimento in db_alimentos.values():
