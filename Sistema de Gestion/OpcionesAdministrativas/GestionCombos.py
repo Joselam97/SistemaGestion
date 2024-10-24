@@ -143,7 +143,7 @@ def menu_combo(gestion_alimento):
         print("2. Eliminar Combo")
         print("3. Modificar Combo")
         print("4. Mostrar Combos")
-        print("5. Volver al Menú Administrativo")
+        print("5. Volver al Menu Administrativo")
 
         opcion = input("Seleccione una opción: ")
 
