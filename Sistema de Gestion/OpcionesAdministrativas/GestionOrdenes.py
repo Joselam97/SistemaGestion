@@ -317,22 +317,28 @@ class GestionOrdenes(CrearUsuario, GestionAlimento, GestionCombo):
             print("\nConsulta completada.")
 
 #funcion para facturar una orden
-    def facturar_orden(self, id_orden):
+    def facturar_orden(self,usuario, id_orden):
         #abre la base de datos de ordenes y permite hacer modificacions
         with shelve.open(self.ordenes_db_name, writeback=True) as db_ordenes:
-            #comprueba si el ID de la orden existe
-            if id_orden not in db_ordenes:
-                print("El ID de la orden no existe.")
+            #comprueba si el usuario de la orden existe
+            if usuario not in db_ordenes:
+                print("El usuario de la orden no existe")
                 return
 
-#comprueba si la orden ya esta facturada
-            if db_ordenes[id_orden]["facturada"]:
-                print("La orden ya ha sido facturada.")
+#verifica si el ID de la orden existe para ese usuario
+            if id_orden not in db_ordenes[usuario]:
+                print("El ID de la orden no existe para el usuario")
                 return
 
 #marca la orden como facturada
-            db_ordenes[id_orden]["facturada"] = True
-            print(f"La orden con ID {id_orden} ha sido facturada exitosamente.")
+            if db_ordenes[usuario][id_orden]["facturada"]:
+                print("La orden ya ha sido facturada")
+                return
+            
+            #marca la orden como facturada
+            db_ordenes[usuario][id_orden]["facturada"] = True
+            print(f"La orden con el ID {id_orden} ha sido facturada exitosamente. ")
+                
 
 #funcion para eliminar la orden
     def eliminar_orden(self, usuario, id_orden):
@@ -370,6 +376,8 @@ class GestionOrdenes(CrearUsuario, GestionAlimento, GestionCombo):
 
             if opcion == "1":
                 self.crear_orden()
+                
+                
             elif opcion == "2":
                 usuario = self.solicitar_usuario()
                 if usuario:
@@ -380,8 +388,12 @@ class GestionOrdenes(CrearUsuario, GestionAlimento, GestionCombo):
                             self.editar_orden(usuario,id_orden)
                         else:
                             print("Orden no válida seleccionada.")
+                            
+                            
             elif opcion == "3":
                 self.consultar_ordenes()
+                
+                
             elif opcion == "4":
                 usuario = self.solicitar_usuario()
                 if usuario:
@@ -389,9 +401,11 @@ class GestionOrdenes(CrearUsuario, GestionAlimento, GestionCombo):
                     if ordenes:
                         id_orden = input("Ingrese el identificador de la orden a facturar: ")
                         if id_orden in ordenes:
-                            self.facturar_orden(id_orden)
+                            self.facturar_orden(usuario,id_orden)
                         else:
                             print("Orden no válida seleccionada.")
+                            
+                            
             elif opcion == "5":
                 usuario = self.solicitar_usuario()
                 if usuario:
@@ -402,6 +416,8 @@ class GestionOrdenes(CrearUsuario, GestionAlimento, GestionCombo):
                             self.eliminar_orden(usuario,id_orden)
                         else:
                             print("Orden no válida seleccionada.")
+                            
+                            
             elif opcion == "6":
                 print("Volviendo al Menu Administrativo...")
                 break
