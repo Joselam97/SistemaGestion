@@ -20,25 +20,18 @@ class GestionOrdenes(CrearUsuario, GestionAlimento, GestionCombo):
                 return None 
             #verifica si el usuario existe en la base de datos
             if self.verificar_usuario(usuario):
+                print(f"Usuario '{usuario}' verificado exitosamente.")
                 return usuario
             else:
                 print("El usuario ingresado no existe. Por favor, intente de nuevo.")
     
     #genera un identificador unico para cada orden, basado en la fecha
-    def generar_identificador_orden(self):
+    def generar_identificador_orden(self,usuario):
         #obtiene la fecha actual
-        fecha_hoy = datetime.now().strftime('%Y-%m-%d')
-        #inicializa el 'consecutivo' en 1
-        consecutivo = 1
+        fecha_hoy = datetime.now().strftime('%Y-%m-%d-%H%M%S')
         
-        #abre la base de datos para contar cuántas órdenes ya existen hoy y generar el consecutivo
-        with shelve.open(self.ordenes_db_name) as db_ordenes:
-            for orden_id in db_ordenes.keys():
-                if orden_id.startswith(f"ORD-{fecha_hoy}"):
-                    #incrementa el consecutivo si encuentra ordenes con la misma fecha
-                    consecutivo += 1
-        #retorna un identificador unico usando la fecha y el consecutivo
-        return f"ORD-{fecha_hoy}-{consecutivo}"
+        #retorna un identificador unico usando la fecha en formato yyyy-mm-dd y hhmmss
+        return f"ORD-{fecha_hoy}"
     
     #crea una nueva orden y la guarda en la base de datos
     def crear_orden(self):
@@ -46,11 +39,12 @@ class GestionOrdenes(CrearUsuario, GestionAlimento, GestionCombo):
         usuario = self.solicitar_usuario()
         if usuario is None:
             return
+        print(f"Usuario en crear_orden: '{usuario}'")
 
         #genera un identificador unico para la orden
-        id_orden = self.generar_identificador_orden()
+        id_orden = self.generar_identificador_orden(usuario)
         #obtiene la fecha y hora actual
-        fecha_hora = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        fecha_hora = datetime.now().strftime('%Y-%m-%d %H%M%S')
         
         #estructura de la nueva orden con todos los detalles necesarios
         nueva_orden = {
@@ -60,15 +54,18 @@ class GestionOrdenes(CrearUsuario, GestionAlimento, GestionCombo):
             "alimentos": {},
             "facturada": False
         }
+        print(f"Creando nueva orden con usuario: '{nueva_orden['usuario']}'")
 
         #guarda la nueva orden en la base de datos
         with shelve.open(self.ordenes_db_name, writeback=True) as db_ordenes:
-            #lista que va guardando las ordenes en cada indice
-            db_ordenes[id_orden] = nueva_orden
-            #redirige a la edicion de la orden
-        print(f"Orden creada con ID: {id_orden}. Redirigiendo a la edición.")
-        #llama a la funcion para editar la orden recien creada
-        self.editar_orden(id_orden)
+            if usuario not in db_ordenes:
+                #crea un diccionario vacío para el usuario si no existe
+                db_ordenes[usuario] = {}  
+                #guarda la orden bajo la clave del usuario
+            db_ordenes[usuario][id_orden] = nueva_orden  
+            print(f"Orden creada con ID: {id_orden} para el usuario {usuario}.")
+    
+        self.editar_orden(usuario,id_orden)
     
     #muestra las ordenes de un usuario, filtrando por si estan facturadas o no    
     def mostrar_ordenes_usuario(self, usuario, facturadas=False):
@@ -78,11 +75,15 @@ class GestionOrdenes(CrearUsuario, GestionAlimento, GestionCombo):
         with shelve.open(self.ordenes_db_name) as db_ordenes:
             print(f"\n--- Órdenes del usuario '{usuario}' ---")
             #recorre todas las ordenes y muestra las que coincidan con el usuario y estado de la facturacion
-            for id_orden, datos in db_ordenes.items():
-                if datos["usuario"] == usuario and datos["facturada"] == facturadas:
-                    print(f"ID Orden: {id_orden}, Fecha y Hora: {datos['fecha_hora']}")
-                    #agrega el identificador de la orden a la lista
-                    ordenes_ids.append(id_orden)
+            if usuario in db_ordenes:    
+                for id_orden, datos in db_ordenes[usuario].items():
+                    if datos["usuario"] == usuario and datos["facturada"] == facturadas:
+                        print(f"ID Orden: {id_orden}, Fecha y Hora: {datos['fecha_hora']}")
+                        #agrega el identificador de la orden a la lista
+                        ordenes_ids.append(id_orden)
+                    else:
+                        print("No se encontraron órdenes para este usuario.")
+                return ordenes_ids
 
             #si no se encontraron ordenes, muestra un mensaje indicando el resultado
             if not ordenes_ids:
@@ -95,16 +96,16 @@ class GestionOrdenes(CrearUsuario, GestionAlimento, GestionCombo):
         return ordenes_ids
     
     #funcion para editar una orden especifica
-    def editar_orden(self, id_orden):
+    def editar_orden(self, usuario, id_orden):
         #abre la base de datos de ordenes
         with shelve.open(self.ordenes_db_name, writeback=True) as db_ordenes:
             #verifica si el identificador de la orden existe
-            if id_orden not in db_ordenes:
+            if usuario not in db_ordenes or id_orden not in db_ordenes[usuario]:
                 print("El ID de la orden no existe.")
                 return
  
             #obtiene la orden a editar
-            orden = db_ordenes[id_orden]
+            orden = db_ordenes[usuario][id_orden]
             #verifica si la orden ya fue facturada
             if orden["facturada"]:
                 print("La orden ya ha sido facturada y no se puede editar.")
@@ -122,13 +123,13 @@ class GestionOrdenes(CrearUsuario, GestionAlimento, GestionCombo):
                 opcion = input("Seleccione una opción: ")
                 #llama a la funcion correspondiente segun la opcion
                 if opcion == "1":
-                    self.incluir_combo(id_orden, db_ordenes)
+                    self.incluir_combo(usuario, id_orden, db_ordenes)
                 elif opcion == "2":
-                    self.disminuir_combo(id_orden, db_ordenes)
+                    self.disminuir_combo(usuario, id_orden, db_ordenes)
                 elif opcion == "3":
-                    self.incluir_alimento(id_orden, db_ordenes)
+                    self.incluir_alimento(usuario, id_orden, db_ordenes)
                 elif opcion == "4":
-                    self.disminuir_alimento(id_orden, db_ordenes)
+                    self.disminuir_alimento(usuario, id_orden, db_ordenes)
                 elif opcion == "5":
                     print("Regresando al menú principal.")
                     break
@@ -136,11 +137,11 @@ class GestionOrdenes(CrearUsuario, GestionAlimento, GestionCombo):
                     print("Opción no válida. Intente de nuevo.")
 
     #funcion para incluir un como en una orden
-    def incluir_combo(self, id_orden, db_ordenes):
+    def incluir_combo(self, usuario, id_orden, db_ordenes):
         #abre la base de datos de combos
         with shelve.open('combos.db') as db_combos:
             #obtiene la orden a modificar
-            orden = db_ordenes[id_orden]
+            orden = db_ordenes[usuario][id_orden]
 
             #muestra todos los combos disponibles, por medio de sus claves que estan guardadas en un diccionario
             print("\n--- Combos Disponibles ---")
@@ -154,22 +155,30 @@ class GestionOrdenes(CrearUsuario, GestionAlimento, GestionCombo):
 
             #verifica si el combo existe en la base de datos
             if combo_seleccionado in db_combos:
-                cantidad = int(input("Ingrese la cantidad de este combo: "))
-                #si el combo ya esta en la orden, aumenta la cantidad
+                while True:
+                    try:
+                        cantidad = int(input("Ingrese la cantidad de este combo: "))
+                        break  # Sale del bucle si la entrada es válida
+                    except ValueError:
+                        print("Error: Debe ingresar un número entero para la cantidad.")
+
+                #si el combo ya está en la orden, aumenta la cantidad
                 if combo_seleccionado in orden["combos"]:
                     orden["combos"][combo_seleccionado] += cantidad
                 else:
                     orden["combos"][combo_seleccionado] = cantidad
-                db_ordenes[id_orden] = orden
-                #actualiza la orden en la base de datos
+            
+            #actualiza la orden en la base de datos
+                db_ordenes[usuario][id_orden] = orden
                 print(f"Combo '{combo_seleccionado}' incluido con éxito en la orden.")
             else:
                 print("El combo ingresado no existe. Intente de nuevo.")
-
+            
+            
     #funcion para disminuir la cantidad de un combo en una orden
-    def disminuir_combo(self, id_orden, db_ordenes):
+    def disminuir_combo(self, usuario, id_orden, db_ordenes):
         #obtiene la orden a modificar
-        orden = db_ordenes[id_orden]
+        orden = db_ordenes[usuario][id_orden]
         print("\n--- Combos en la Orden ---")
         #muestra los combos actuales en la orden, iterando por cada uno
         for combo, cantidad in orden["combos"].items():
@@ -182,26 +191,34 @@ class GestionOrdenes(CrearUsuario, GestionAlimento, GestionCombo):
 
         #verifica si el combo esta en la orden
         if combo_seleccionado in orden["combos"]:
-            cantidad = int(input("Ingrese la cantidad a disminuir: "))
-            #si la cantidad a disminuir es igual o mayor a la cantidad actual elimina el combo
+            while True:
+                try:
+                    #solicita la cantidad que desea disminuir y asegura que sea un entero
+                    cantidad = int(input("Ingrese la cantidad a disminuir: "))
+                    break  # Sale del bucle si la entrada es válida
+                except ValueError:
+                    print("Error: Debe ingresar un número entero para la cantidad a disminuir.")
+
+                #si la cantidad a disminuir es igual o mayor a la cantidad actual, elimina el combo
             if cantidad >= orden["combos"][combo_seleccionado]:
                 del orden["combos"][combo_seleccionado]
                 print(f"Combo '{combo_seleccionado}' eliminado de la orden.")
             else:
-                #de lo contrario, disminuye la cantidad del combo
+            #si la cantidad a disminuir es menor, simplemente resta la cantidad
                 orden["combos"][combo_seleccionado] -= cantidad
                 print(f"Combo '{combo_seleccionado}' disminuido en la orden.")
-                #actualiza la orden en la base de datos
-            db_ordenes[id_orden] = orden
+
+        #actualiza la orden en la base de datos
+            db_ordenes[usuario][id_orden] = orden
         else:
             print("El combo ingresado no está en la orden.")
-    
+
     #funcion para incluir un alimento en una orden
-    def incluir_alimento(self, id_orden, db_ordenes):
+    def incluir_alimento(self, usuario, id_orden, db_ordenes):
         #abre la base de datos de alimentos
         with shelve.open('alimentos.db') as db_alimentos:
             #obtiene la orden a modificar
-            orden = db_ordenes[id_orden]
+            orden = db_ordenes[usuario][id_orden]
 
             #muestra todos los alimentos disponibles
             print("\n--- Alimentos Disponibles ---")
@@ -215,24 +232,30 @@ class GestionOrdenes(CrearUsuario, GestionAlimento, GestionCombo):
            
             #verifica si el alimento existe en la base de datos
             if alimento_seleccionado in db_alimentos:
-                cantidad = int(input("Ingrese la cantidad de este alimento: "))
-                #si el alimento ya esta en la orden, aumento la cantidad
+                while True:
+                    try:
+                    #solicita la cantidad y asegura que sea un entero
+                        cantidad = int(input("Ingrese la cantidad de este alimento: "))
+                        break  #rompe el bucle si la entrada es válida
+                    except ValueError:
+                        print("Error: Debe ingresar un número entero para la cantidad.")
+
+                #si el alimento ya está en la orden, aumenta la cantidad
                 if alimento_seleccionado in orden["alimentos"]:
                     orden["alimentos"][alimento_seleccionado] += cantidad
-                    #si el alimento no esta en la orden, se agrega la cantidad especificada
                 else:
                     orden["alimentos"][alimento_seleccionado] = cantidad
-                    #actualiza la orden con los nuevos alimentos n la base de datos
-                db_ordenes[id_orden] = orden
+
+                #actualiza la orden en la base de datos
+                db_ordenes[usuario][id_orden] = orden
                 print(f"Alimento '{alimento_seleccionado}' incluido con éxito en la orden.")
             else:
-                #mensaje para confirmar que el alimento fue agregado correctamente
                 print("El alimento ingresado no existe. Intente de nuevo.")
 
     #funcion para disminuir la cantidad de un alimento en una orden
-    def disminuir_alimento(self, id_orden, db_ordenes):
+    def disminuir_alimento(self,usuario, id_orden, db_ordenes):
         #obtiene la orden que se va a modificar
-        orden = db_ordenes[id_orden]
+        orden = db_ordenes[usuario][id_orden]
         print("\n--- Alimentos en la Orden ---")
         #muestra todos los alimentos que ya estan en la orden
         for alimento, cantidad in orden["alimentos"].items():
@@ -245,18 +268,25 @@ class GestionOrdenes(CrearUsuario, GestionAlimento, GestionCombo):
 
 #comprueba si el alimento ingresado esta en la orden
         if alimento_seleccionado in orden["alimentos"]:
-            #solicita la cantidad que desea disminuir
-            cantidad = int(input("Ingrese la cantidad a disminuir: "))
-            #si la cantidad a disminuir es igual o mayor a la cantidad actual elimina el alimento
+            while True:
+                try:
+                    #solicita la cantidad que desea disminuir y asegura que sea un entero
+                    cantidad = int(input("Ingrese la cantidad a disminuir: "))
+                    break  # Sale del bucle si la entrada es válida
+                except ValueError:
+                    print("Error: Debe ingresar un número entero para la cantidad a disminuir.")
+
+                #si la cantidad a disminuir es igual o mayor a la cantidad actual, elimina el alimento
             if cantidad >= orden["alimentos"][alimento_seleccionado]:
                 del orden["alimentos"][alimento_seleccionado]
                 print(f"Alimento '{alimento_seleccionado}' eliminado de la orden.")
-                #si la cantidad a disminuir es menor, simplemente resta la cantidad
             else:
+                #si la cantidad a disminuir es menor, simplemente resta la cantidad
                 orden["alimentos"][alimento_seleccionado] -= cantidad
                 print(f"Alimento '{alimento_seleccionado}' disminuido en la orden.")
-                #actualiza la orden con la nueva cantidad de alimentos
-            db_ordenes[id_orden] = orden
+        
+            #actualiza la orden con la nueva cantidad de alimentos
+            db_ordenes[usuario][id_orden] = orden
         else:
             print("El alimento ingresado no está en la orden.")
 
@@ -266,16 +296,13 @@ class GestionOrdenes(CrearUsuario, GestionAlimento, GestionCombo):
         usuario = self.solicitar_usuario()
         if usuario is None:
             return
+        print(f"Usuario en consultar_ordenes: '{usuario}'")
 
         #abre la base de datos de ordenes para mostrar todas las ordenes del usuario 'x'
         with shelve.open(self.ordenes_db_name) as db_ordenes:
             print(f"\n--- Órdenes del usuario '{usuario}' ---")
-            ordenes_encontradas = False
-            #itera por todas las ordenes en la base de datos
-            for id_orden, datos in db_ordenes.items():
-                if datos["usuario"] == usuario:
-                    ordenes_encontradas = True
-                    #muestra los detalles de cada orden
+            if usuario in db_ordenes:
+                for id_orden, datos in db_ordenes[usuario].items():
                     print(f"\nID Orden: {id_orden}")
                     print(f"Fecha y Hora: {datos['fecha_hora']}")
                     print("Combos:")
@@ -285,8 +312,7 @@ class GestionOrdenes(CrearUsuario, GestionAlimento, GestionCombo):
                     for alimento, cantidad in datos["alimentos"].items():
                         print(f" - {alimento}: {cantidad}")
                     print(f"Facturada: {'Sí' if datos['facturada'] else 'No'}")
-            if not ordenes_encontradas:
-                #mensaje si no se encuentran ordenes para el usuario
+            else:
                 print("No se encontraron órdenes para este usuario.")
             print("\nConsulta completada.")
 
@@ -309,25 +335,26 @@ class GestionOrdenes(CrearUsuario, GestionAlimento, GestionCombo):
             print(f"La orden con ID {id_orden} ha sido facturada exitosamente.")
 
 #funcion para eliminar la orden
-    def eliminar_orden(self, id_orden):
+    def eliminar_orden(self, usuario, id_orden):
         #abre la base de datos de ordenes y permite hacer modificaciones
         with shelve.open(self.ordenes_db_name, writeback=True) as db_ordenes:
-            #comprueba si el id de la orden existe
-            if id_orden not in db_ordenes:
-                print("El ID de la orden no existe.")
+            #comprueba si el user esta en ordenes
+            if usuario not in db_ordenes:
+                print("El Usuario no existe")
                 return
 
-#comprueba si la orden esta vacia para eliminarla
-            if db_ordenes[id_orden]["facturada"]:
-                print("No se puede eliminar una orden que ha sido facturada.")
+            # verifica si el ID de la orden existe para ese usuario
+            if id_orden not in db_ordenes[usuario]:
+                print("El ID de la orden no existe para el usuario.")
                 return
 
-            if not db_ordenes[id_orden]["combos"] and not db_ordenes[id_orden]["alimentos"]:
-                del db_ordenes[id_orden]
+            if not db_ordenes[usuario][id_orden]["combos"] and not db_ordenes[usuario][id_orden]["alimentos"]:
+                del db_ordenes[usuario][id_orden]
                 print(f"La orden con ID {id_orden} ha sido eliminada exitosamente.")
             else:
                 print("No se puede eliminar una orden que contiene alimentos o combos.")
-
+                
+                
 #menu principal para gestionar las ordenes
     def menu_ordenes(self):
         while True:
@@ -350,7 +377,7 @@ class GestionOrdenes(CrearUsuario, GestionAlimento, GestionCombo):
                     if ordenes:
                         id_orden = input("Ingrese el identificador de la orden a editar: ")
                         if id_orden in ordenes:
-                            self.editar_orden(id_orden)
+                            self.editar_orden(usuario,id_orden)
                         else:
                             print("Orden no válida seleccionada.")
             elif opcion == "3":
@@ -372,7 +399,7 @@ class GestionOrdenes(CrearUsuario, GestionAlimento, GestionCombo):
                     if ordenes:
                         id_orden = input("Ingrese el identificador de la orden a eliminar: ")
                         if id_orden in ordenes:
-                            self.eliminar_orden(id_orden)
+                            self.eliminar_orden(usuario,id_orden)
                         else:
                             print("Orden no válida seleccionada.")
             elif opcion == "6":
