@@ -54,6 +54,10 @@ class CrearUsuario:
                 print(f"Usuario '{nombre_usuario}' eliminado con éxito.")
             else:
                 print(f"Error: El usuario '{nombre_usuario}' no existe en el sistema.")
+                
+    def verificar_usuario(self, nombre_usuario):
+        with shelve.open(self.db_name) as db_usuarios:
+            return nombre_usuario in db_usuarios
 
 #ejemplo de uso del menu 
 if __name__ == "__main__":

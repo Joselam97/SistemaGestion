@@ -1,0 +1,387 @@
+import shelve
+from datetime import datetime
+from CrearUsuario import CrearUsuario  # Se asume que tienes una clase CrearUsuario implementada
+from GestionAlimento import GestionAlimento
+from GestionCombos import GestionCombo
+
+class GestionOrdenes(CrearUsuario, GestionAlimento, GestionCombo):
+    #inicializa la clase y define la base de datos de ordenes
+    def __init__(self):
+        super().__init__()
+        #el argumento self crea la base de datos con el valor 'ordenes_db'
+        self.ordenes_db_name = 'ordenes.db'
+    
+    #funcion para solicitar el nombre de usuario
+    def solicitar_usuario(self):
+        while True:
+            usuario = input("Ingrese su nombre de usuario (o escriba 'volver' para regresar al menú): ")
+            if usuario.lower() == "volver":
+                #regresa si el usuario decide volver
+                return None 
+            #verifica si el usuario existe en la base de datos
+            if self.verificar_usuario(usuario):
+                return usuario
+            else:
+                print("El usuario ingresado no existe. Por favor, intente de nuevo.")
+    
+    #genera un identificador unico para cada orden, basado en la fecha
+    def generar_identificador_orden(self):
+        #obtiene la fecha actual
+        fecha_hoy = datetime.now().strftime('%Y-%m-%d')
+        #inicializa el 'consecutivo' en 1
+        consecutivo = 1
+        
+        #abre la base de datos para contar cuántas órdenes ya existen hoy y generar el consecutivo
+        with shelve.open(self.ordenes_db_name) as db_ordenes:
+            for orden_id in db_ordenes.keys():
+                if orden_id.startswith(f"ORD-{fecha_hoy}"):
+                    #incrementa el consecutivo si encuentra ordenes con la misma fecha
+                    consecutivo += 1
+        #retorna un identificador unico usando la fecha y el consecutivo
+        return f"ORD-{fecha_hoy}-{consecutivo}"
+    
+    #crea una nueva orden y la guarda en la base de datos
+    def crear_orden(self):
+        #solicita el usuario
+        usuario = self.solicitar_usuario()
+        if usuario is None:
+            return
+
+        #genera un identificador unico para la orden
+        id_orden = self.generar_identificador_orden()
+        #obtiene la fecha y hora actual
+        fecha_hora = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        
+        #estructura de la nueva orden con todos los detalles necesarios
+        nueva_orden = {
+            "usuario": usuario,
+            "fecha_hora": fecha_hora,
+            "combos": {},
+            "alimentos": {},
+            "facturada": False
+        }
+
+        #guarda la nueva orden en la base de datos
+        with shelve.open(self.ordenes_db_name, writeback=True) as db_ordenes:
+            #lista que va guardando las ordenes en cada indice
+            db_ordenes[id_orden] = nueva_orden
+            #redirige a la edicion de la orden
+        print(f"Orden creada con ID: {id_orden}. Redirigiendo a la edición.")
+        #llama a la funcion para editar la orden recien creada
+        self.editar_orden(id_orden)
+    
+    #muestra las ordenes de un usuario, filtrando por si estan facturadas o no    
+    def mostrar_ordenes_usuario(self, usuario, facturadas=False):
+        #lista para almacenar los identificadores de las ordenes
+        ordenes_ids = []
+        #abre la base de datos de ordenes
+        with shelve.open(self.ordenes_db_name) as db_ordenes:
+            print(f"\n--- Órdenes del usuario '{usuario}' ---")
+            #recorre todas las ordenes y muestra las que coincidan con el usuario y estado de la facturacion
+            for id_orden, datos in db_ordenes.items():
+                if datos["usuario"] == usuario and datos["facturada"] == facturadas:
+                    print(f"ID Orden: {id_orden}, Fecha y Hora: {datos['fecha_hora']}")
+                    #agrega el identificador de la orden a la lista
+                    ordenes_ids.append(id_orden)
+
+            #si no se encontraron ordenes, muestra un mensaje indicando el resultado
+            if not ordenes_ids:
+                if facturadas:
+                    print("No se encontraron órdenes facturadas.")
+                else:
+                    print("No se encontraron órdenes no facturadas.")
+
+        #retorna la lista de identificadores de ordenes
+        return ordenes_ids
+    
+    #funcion para editar una orden especifica
+    def editar_orden(self, id_orden):
+        #abre la base de datos de ordenes
+        with shelve.open(self.ordenes_db_name, writeback=True) as db_ordenes:
+            #verifica si el identificador de la orden existe
+            if id_orden not in db_ordenes:
+                print("El ID de la orden no existe.")
+                return
+ 
+            #obtiene la orden a editar
+            orden = db_ordenes[id_orden]
+            #verifica si la orden ya fue facturada
+            if orden["facturada"]:
+                print("La orden ya ha sido facturada y no se puede editar.")
+                return
+
+            #menu de edicion de la orden
+            while True:
+                print("\n--- Edición de Orden ---")
+                print("1. Incluir combo")
+                print("2. Disminuir combo")
+                print("3. Incluir alimento")
+                print("4. Disminuir alimento")
+                print("5. Volver al menú principal")
+
+                opcion = input("Seleccione una opción: ")
+                #llama a la funcion correspondiente segun la opcion
+                if opcion == "1":
+                    self.incluir_combo(id_orden, db_ordenes)
+                elif opcion == "2":
+                    self.disminuir_combo(id_orden, db_ordenes)
+                elif opcion == "3":
+                    self.incluir_alimento(id_orden, db_ordenes)
+                elif opcion == "4":
+                    self.disminuir_alimento(id_orden, db_ordenes)
+                elif opcion == "5":
+                    print("Regresando al menú principal.")
+                    break
+                else:
+                    print("Opción no válida. Intente de nuevo.")
+
+    #funcion para incluir un como en una orden
+    def incluir_combo(self, id_orden, db_ordenes):
+        #abre la base de datos de combos
+        with shelve.open('combos.db') as db_combos:
+            #obtiene la orden a modificar
+            orden = db_ordenes[id_orden]
+
+            #muestra todos los combos disponibles, por medio de sus claves que estan guardadas en un diccionario
+            print("\n--- Combos Disponibles ---")
+            for combo in db_combos.keys():
+                print(f"- {combo}")
+
+            #solicita el nombre del combo a incluir
+            combo_seleccionado = input("Ingrese el nombre del combo a incluir (o 'volver' para regresar): ")
+            if combo_seleccionado.lower() == "volver":
+                return
+
+            #verifica si el combo existe en la base de datos
+            if combo_seleccionado in db_combos:
+                cantidad = int(input("Ingrese la cantidad de este combo: "))
+                #si el combo ya esta en la orden, aumenta la cantidad
+                if combo_seleccionado in orden["combos"]:
+                    orden["combos"][combo_seleccionado] += cantidad
+                else:
+                    orden["combos"][combo_seleccionado] = cantidad
+                db_ordenes[id_orden] = orden
+                #actualiza la orden en la base de datos
+                print(f"Combo '{combo_seleccionado}' incluido con éxito en la orden.")
+            else:
+                print("El combo ingresado no existe. Intente de nuevo.")
+
+    #funcion para disminuir la cantidad de un combo en una orden
+    def disminuir_combo(self, id_orden, db_ordenes):
+        #obtiene la orden a modificar
+        orden = db_ordenes[id_orden]
+        print("\n--- Combos en la Orden ---")
+        #muestra los combos actuales en la orden, iterando por cada uno
+        for combo, cantidad in orden["combos"].items():
+            print(f"- {combo}: {cantidad}")
+
+        #solicita el nombre del combo a disminuir
+        combo_seleccionado = input("Ingrese el nombre del combo a disminuir (o 'volver' para regresar): ")
+        if combo_seleccionado.lower() == "volver":
+            return
+
+        #verifica si el combo esta en la orden
+        if combo_seleccionado in orden["combos"]:
+            cantidad = int(input("Ingrese la cantidad a disminuir: "))
+            #si la cantidad a disminuir es igual o mayor a la cantidad actual elimina el combo
+            if cantidad >= orden["combos"][combo_seleccionado]:
+                del orden["combos"][combo_seleccionado]
+                print(f"Combo '{combo_seleccionado}' eliminado de la orden.")
+            else:
+                #de lo contrario, disminuye la cantidad del combo
+                orden["combos"][combo_seleccionado] -= cantidad
+                print(f"Combo '{combo_seleccionado}' disminuido en la orden.")
+                #actualiza la orden en la base de datos
+            db_ordenes[id_orden] = orden
+        else:
+            print("El combo ingresado no está en la orden.")
+    
+    #funcion para incluir un alimento en una orden
+    def incluir_alimento(self, id_orden, db_ordenes):
+        #abre la base de datos de alimentos
+        with shelve.open('alimentos.db') as db_alimentos:
+            #obtiene la orden a modificar
+            orden = db_ordenes[id_orden]
+
+            #muestra todos los alimentos disponibles
+            print("\n--- Alimentos Disponibles ---")
+            for alimento in db_alimentos.keys():
+                print(f"- {alimento}")
+
+            #solicita el nombre del alimento a incluir
+            alimento_seleccionado = input("Ingrese el nombre del alimento a incluir (o 'volver' para regresar): ")
+            if alimento_seleccionado.lower() == "volver":
+                return
+           
+            #verifica si el alimento existe en la base de datos
+            if alimento_seleccionado in db_alimentos:
+                cantidad = int(input("Ingrese la cantidad de este alimento: "))
+                #si el alimento ya esta en la orden, aumento la cantidad
+                if alimento_seleccionado in orden["alimentos"]:
+                    orden["alimentos"][alimento_seleccionado] += cantidad
+                    #si el alimento no esta en la orden, se agrega la cantidad especificada
+                else:
+                    orden["alimentos"][alimento_seleccionado] = cantidad
+                    #actualiza la orden con los nuevos alimentos n la base de datos
+                db_ordenes[id_orden] = orden
+                print(f"Alimento '{alimento_seleccionado}' incluido con éxito en la orden.")
+            else:
+                #mensaje para confirmar que el alimento fue agregado correctamente
+                print("El alimento ingresado no existe. Intente de nuevo.")
+
+    #funcion para disminuir la cantidad de un alimento en una orden
+    def disminuir_alimento(self, id_orden, db_ordenes):
+        #obtiene la orden que se va a modificar
+        orden = db_ordenes[id_orden]
+        print("\n--- Alimentos en la Orden ---")
+        #muestra todos los alimentos que ya estan en la orden
+        for alimento, cantidad in orden["alimentos"].items():
+            print(f"- {alimento}: {cantidad}")
+ 
+ #solicita al usuario el alimento que desea disminuir
+        alimento_seleccionado = input("Ingrese el nombre del alimento a disminuir (o 'volver' para regresar): ")
+        if alimento_seleccionado.lower() == "volver":
+            return
+
+#comprueba si el alimento ingresado esta en la orden
+        if alimento_seleccionado in orden["alimentos"]:
+            #solicita la cantidad que desea disminuir
+            cantidad = int(input("Ingrese la cantidad a disminuir: "))
+            #si la cantidad a disminuir es igual o mayor a la cantidad actual elimina el alimento
+            if cantidad >= orden["alimentos"][alimento_seleccionado]:
+                del orden["alimentos"][alimento_seleccionado]
+                print(f"Alimento '{alimento_seleccionado}' eliminado de la orden.")
+                #si la cantidad a disminuir es menor, simplemente resta la cantidad
+            else:
+                orden["alimentos"][alimento_seleccionado] -= cantidad
+                print(f"Alimento '{alimento_seleccionado}' disminuido en la orden.")
+                #actualiza la orden con la nueva cantidad de alimentos
+            db_ordenes[id_orden] = orden
+        else:
+            print("El alimento ingresado no está en la orden.")
+
+    #funcion para consultar las ordenes de un usuario
+    def consultar_ordenes(self):
+        #solicita el usuario
+        usuario = self.solicitar_usuario()
+        if usuario is None:
+            return
+
+        #abre la base de datos de ordenes para mostrar todas las ordenes del usuario 'x'
+        with shelve.open(self.ordenes_db_name) as db_ordenes:
+            print(f"\n--- Órdenes del usuario '{usuario}' ---")
+            ordenes_encontradas = False
+            #itera por todas las ordenes en la base de datos
+            for id_orden, datos in db_ordenes.items():
+                if datos["usuario"] == usuario:
+                    ordenes_encontradas = True
+                    #muestra los detalles de cada orden
+                    print(f"\nID Orden: {id_orden}")
+                    print(f"Fecha y Hora: {datos['fecha_hora']}")
+                    print("Combos:")
+                    for combo, cantidad in datos["combos"].items():
+                        print(f" - {combo}: {cantidad}")
+                    print("Alimentos:")
+                    for alimento, cantidad in datos["alimentos"].items():
+                        print(f" - {alimento}: {cantidad}")
+                    print(f"Facturada: {'Sí' if datos['facturada'] else 'No'}")
+            if not ordenes_encontradas:
+                #mensaje si no se encuentran ordenes para el usuario
+                print("No se encontraron órdenes para este usuario.")
+            print("\nConsulta completada.")
+
+#funcion para facturar una orden
+    def facturar_orden(self, id_orden):
+        #abre la base de datos de ordenes y permite hacer modificacions
+        with shelve.open(self.ordenes_db_name, writeback=True) as db_ordenes:
+            #comprueba si el ID de la orden existe
+            if id_orden not in db_ordenes:
+                print("El ID de la orden no existe.")
+                return
+
+#comprueba si la orden ya esta facturada
+            if db_ordenes[id_orden]["facturada"]:
+                print("La orden ya ha sido facturada.")
+                return
+
+#marca la orden como facturada
+            db_ordenes[id_orden]["facturada"] = True
+            print(f"La orden con ID {id_orden} ha sido facturada exitosamente.")
+
+#funcion para eliminar la orden
+    def eliminar_orden(self, id_orden):
+        #abre la base de datos de ordenes y permite hacer modificaciones
+        with shelve.open(self.ordenes_db_name, writeback=True) as db_ordenes:
+            #comprueba si el id de la orden existe
+            if id_orden not in db_ordenes:
+                print("El ID de la orden no existe.")
+                return
+
+#comprueba si la orden esta vacia para eliminarla
+            if db_ordenes[id_orden]["facturada"]:
+                print("No se puede eliminar una orden que ha sido facturada.")
+                return
+
+            if not db_ordenes[id_orden]["combos"] and not db_ordenes[id_orden]["alimentos"]:
+                del db_ordenes[id_orden]
+                print(f"La orden con ID {id_orden} ha sido eliminada exitosamente.")
+            else:
+                print("No se puede eliminar una orden que contiene alimentos o combos.")
+
+#menu principal para gestionar las ordenes
+    def menu_ordenes(self):
+        while True:
+            print("\n--- Menú de Gestión de Órdenes ---")
+            print("1. Crear Orden")
+            print("2. Editar Orden")
+            print("3. Consultar Órdenes")
+            print("4. Facturar Orden")
+            print("5. Eliminar Orden")
+            print("6. Volver al Menu Administrativo")
+
+            opcion = input("Seleccione una opción: ")
+
+            if opcion == "1":
+                self.crear_orden()
+            elif opcion == "2":
+                usuario = self.solicitar_usuario()
+                if usuario:
+                    ordenes = self.mostrar_ordenes_usuario(usuario, facturadas=False)
+                    if ordenes:
+                        id_orden = input("Ingrese el identificador de la orden a editar: ")
+                        if id_orden in ordenes:
+                            self.editar_orden(id_orden)
+                        else:
+                            print("Orden no válida seleccionada.")
+            elif opcion == "3":
+                self.consultar_ordenes()
+            elif opcion == "4":
+                usuario = self.solicitar_usuario()
+                if usuario:
+                    ordenes = self.mostrar_ordenes_usuario(usuario, facturadas=False)
+                    if ordenes:
+                        id_orden = input("Ingrese el identificador de la orden a facturar: ")
+                        if id_orden in ordenes:
+                            self.facturar_orden(id_orden)
+                        else:
+                            print("Orden no válida seleccionada.")
+            elif opcion == "5":
+                usuario = self.solicitar_usuario()
+                if usuario:
+                    ordenes = self.mostrar_ordenes_usuario(usuario, facturadas=False)
+                    if ordenes:
+                        id_orden = input("Ingrese el identificador de la orden a eliminar: ")
+                        if id_orden in ordenes:
+                            self.eliminar_orden(id_orden)
+                        else:
+                            print("Orden no válida seleccionada.")
+            elif opcion == "6":
+                print("Volviendo al Menu Administrativo...")
+                break
+            else:
+                print("Opción no válida. Intente de nuevo.")
+
+# Ejemplo de uso
+if __name__ == "__main__":
+    gestion_ordenes = GestionOrdenes()
+    gestion_ordenes.menu_ordenes()
