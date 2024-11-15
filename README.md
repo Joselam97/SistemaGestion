@@ -1,20 +1,23 @@
 # 🍔 Management System for a Fast-Food Restaurant
 
-This project is a management system for a fast-food restaurant, designed to streamline and organize administrative tasks and order processing.
+A comprehensive management system built to streamline operations in a fast-food restaurant. This project helps in organizing orders, managing menus, and handling customer data, enhancing efficiency and service quality.
 
 ## Features
-- Main menu with options for general and administrative functions
-- Management of orders, menus, and customer data
-- User-friendly interface for restaurant staff
+- **Main Menu**: Provides quick access to general and administrative functions, allowing staff to navigate options for order processing and restaurant management.
+- **Order Management**: Tracks orders efficiently to ensure accurate and timely preparation.
+- **Menu Customization**: Allows for easy updates to menu items and prices.
+- **Customer Data Handling**: Manages customer information, aiding in personalized service.
 
 ## 📖 Usage
-- **Main menu** - Navigate through different management options from the main menu.
-- **Management** - Use admin functions to manage orders, menus, and data efficiently.
+- **Main Menu**: Easily navigate through management and admin functions.
+- **Order Processing**: Record, update, and manage orders from a single interface.
+- **Menu Adjustments**: Modify items and prices in real-time.
+- **Customer Management**: Store and retrieve customer data to improve service quality.
 
 ## 🛠️ Tech Stack
-- **Python** - The core programming language used in this application
+- **Python** - A core programming language for backend functionalities, handling data processing, and user interactions.
 
 ## 🚀 Installation
-1. Clone the repository:
+1. **Clone the Repository**:
    ```bash
    git clone https://github.com/Joselam97/SistemaGestion.git
