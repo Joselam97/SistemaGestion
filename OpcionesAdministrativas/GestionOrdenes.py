@@ -69,28 +69,18 @@ class GestionOrdenes(CrearUsuario, GestionAlimento, GestionCombo):
     
     #muestra las ordenes de un usuario, filtrando por si estan facturadas o no    
     def mostrar_ordenes_usuario(self, usuario, facturadas=False):
-        #lista para almacenar los identificadores de las ordenes
         ordenes_ids = []
-        #abre la base de datos de ordenes
         with shelve.open(self.ordenes_db_name) as db_ordenes:
-            print(f"\n--- Órdenes del usuario '{usuario}' ---")
-            #recorre todas las ordenes y muestra las que coincidan con el usuario y estado de la facturacion
-            if usuario in db_ordenes:    
+            if usuario in db_ordenes:
                 for id_orden, datos in db_ordenes[usuario].items():
-                    if datos["usuario"] == usuario and datos["facturada"] == facturadas:
+                    if datos["facturada"] == facturadas:
                         print(f"ID Orden: {id_orden}, Fecha y Hora: {datos['fecha_hora']}")
-                        #agrega el identificador de la orden a la lista
                         ordenes_ids.append(id_orden)
-                    else:
-                        print("No se encontraron órdenes para este usuario.")
-                return ordenes_ids
 
-            #si no se encontraron ordenes, muestra un mensaje indicando el resultado
+                #si no se encontraron ordenes, muestra un mensaje indicando el resultado
             if not ordenes_ids:
                 if facturadas:
                     print("No se encontraron órdenes facturadas.")
-                else:
-                    print("No se encontraron órdenes no facturadas.")
 
         #retorna la lista de identificadores de ordenes
         return ordenes_ids
