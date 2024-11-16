@@ -6,6 +6,16 @@ class GestionAlimento:
     def __init__(self, db_name='alimentos.db', tipo_alimento_db_name='tipos_alimentos.db'):
         self.db_name = db_name
         self.tipo_alimento_db_name = tipo_alimento_db_name
+        
+        
+    def obtener_info_alimento(self, nombre):
+        """Devuelve los detalles de un alimento, incluyendo precio_venta si está disponible."""
+        with shelve.open(self.db_name) as db_alimentos:
+            if nombre in db_alimentos:
+                return db_alimentos[nombre]
+            else:
+                print(f"Error: El alimento '{nombre}' no existe en la base de datos.")
+                return None
 
 #Funcion para incluir alimento
     def incluir_alimento(self, nombre, tipo, costo_compra, margen_ganancia):

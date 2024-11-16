@@ -44,7 +44,7 @@ class GestionOrdenes(CrearUsuario, GestionAlimento, GestionCombo):
         #genera un identificador unico para la orden
         id_orden = self.generar_identificador_orden(usuario)
         #obtiene la fecha y hora actual
-        fecha_hora = datetime.now().strftime('%Y-%m-%d %H%M%S')
+        fecha_hora = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         
         #estructura de la nueva orden con todos los detalles necesarios
         nueva_orden = {
@@ -321,7 +321,7 @@ class GestionOrdenes(CrearUsuario, GestionAlimento, GestionCombo):
         #abre la base de datos de ordenes y permite hacer modificacions
         with shelve.open(self.ordenes_db_name, writeback=True) as db_ordenes:
             #comprueba si el usuario de la orden existe
-            if usuario not in db_ordenes:
+            if usuario not in db_ordenes or id_orden not in db_ordenes[usuario]:
                 print("El usuario de la orden no existe")
                 return
 

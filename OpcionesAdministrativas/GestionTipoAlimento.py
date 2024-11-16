@@ -8,8 +8,7 @@ class GestionTipoAlimento:
     def existe_tipo(self, tipo):
         with shelve.open(self.db_name) as db:
             return tipo in db
-
-
+        
 #Funcion para incluir tipo
     def incluir_tipo(self, descripcion, origen, libre_gluten):
         #con shelve se abre el archivo de la base de datos db_alimentos para hacer la consulta

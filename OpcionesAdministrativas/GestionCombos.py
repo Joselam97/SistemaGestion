@@ -6,13 +6,19 @@ class GestionCombo:
     def __init__(self, db_name='combos.db', gestion_alimento=None):
         self.db_name = db_name
         self.gestion_alimento = gestion_alimento  
+        
+    
+    def obtener_info_combo(self, nombre):
+        """Devuelve el precio de venta y detalles del combo."""
+        with shelve.open(self.db_name) as db_combos:
+            return db_combos.get(nombre, None)
 
 
 #funcion para incluir combo, solicitando nombre,costo,margen_ganancia y alimentos
     def incluir_combo(self, nombre, costo, margen_ganancia, alimentos):
         #guarda cada combo en la base de datos 'db_name' con en una variable llamada 'db_combos'
         with shelve.open(self.db_name) as db_combos:
-            
+        
             #en caso de existir un combo con ese nombre, da error
             if nombre in db_combos:
                 print(f"Error: Ya existe un combo con el nombre '{nombre}'.")
