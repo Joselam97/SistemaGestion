@@ -159,7 +159,7 @@ def menu_alimento():
         print("2. Eliminar Alimento")
         print("3. Modificar Alimento")
         print("4. Mostrar Alimentos")
-        print("5. Volver al Menú Administrativo")
+        print("5. Volver al Menu General")
 
         opcion = input("Seleccione una opcion: ")
 

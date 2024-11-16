@@ -46,14 +46,14 @@ class ConsultaHistoricoPts(CrearUsuario, Facturacion):
         while True:
             print("\n--- Menú de Consulta de Historial de Puntos ---")
             print("1. Consultar historial de puntos de un usuario")
-            print("2. Volver al Menú Principal")
+            print("2. Volver al Menu General")
             
             opcion = input("Seleccione una opción: ")
             
             if opcion == "1":
                 self.consultar_historial_puntos()
             elif opcion == "2":
-                print("Volviendo al Menú Principal...")
+                print("Volviendo al Menu General...")
                 break
             else:
                 print("Opción no válida, intente de nuevo.")
