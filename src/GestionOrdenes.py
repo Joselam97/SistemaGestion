@@ -14,7 +14,7 @@ class GestionOrdenes(CrearUsuario, GestionAlimento, GestionCombo):
     #funcion para solicitar el nombre de usuario
     def solicitar_usuario(self):
         while True:
-            usuario = input("Ingrese su nombre de usuario (o escriba 'volver' para regresar al menú): ")
+            usuario = input("Ingrese su nombre de usuario (o escriba 'volver' para regresar al menu): ")
             if usuario.lower() == "volver":
                 #regresa si el usuario decide volver
                 return None 
@@ -108,7 +108,7 @@ class GestionOrdenes(CrearUsuario, GestionAlimento, GestionCombo):
                 print("2. Disminuir combo")
                 print("3. Incluir alimento")
                 print("4. Disminuir alimento")
-                print("5. Volver al menú principal")
+                print("5. Volver al menu principal")
 
                 opcion = input("Seleccione una opción: ")
                 #llama a la funcion correspondiente segun la opcion
@@ -121,10 +121,10 @@ class GestionOrdenes(CrearUsuario, GestionAlimento, GestionCombo):
                 elif opcion == "4":
                     self.disminuir_alimento(usuario, id_orden, db_ordenes)
                 elif opcion == "5":
-                    print("Regresando al menú principal.")
+                    print("Regresando al menu principal.")
                     break
                 else:
-                    print("Opción no válida. Intente de nuevo.")
+                    print("Opcion no valida. Intente de nuevo.")
 
     #funcion para incluir un como en una orden
     def incluir_combo(self, usuario, id_orden, db_ordenes):
@@ -150,7 +150,7 @@ class GestionOrdenes(CrearUsuario, GestionAlimento, GestionCombo):
                         cantidad = int(input("Ingrese la cantidad de este combo: "))
                         break  # Sale del bucle si la entrada es válida
                     except ValueError:
-                        print("Error: Debe ingresar un número entero para la cantidad.")
+                        print("Error: Debe ingresar un numero entero para la cantidad.")
 
                 #si el combo ya está en la orden, aumenta la cantidad
                 if combo_seleccionado in orden["combos"]:
@@ -160,7 +160,7 @@ class GestionOrdenes(CrearUsuario, GestionAlimento, GestionCombo):
             
             #actualiza la orden en la base de datos
                 db_ordenes[usuario][id_orden] = orden
-                print(f"Combo '{combo_seleccionado}' incluido con éxito en la orden.")
+                print(f"Combo '{combo_seleccionado}' incluido con exito en la orden.")
             else:
                 print("El combo ingresado no existe. Intente de nuevo.")
             
@@ -187,7 +187,7 @@ class GestionOrdenes(CrearUsuario, GestionAlimento, GestionCombo):
                     cantidad = int(input("Ingrese la cantidad a disminuir: "))
                     break  # Sale del bucle si la entrada es válida
                 except ValueError:
-                    print("Error: Debe ingresar un número entero para la cantidad a disminuir.")
+                    print("Error: Debe ingresar un numero entero para la cantidad a disminuir.")
 
                 #si la cantidad a disminuir es igual o mayor a la cantidad actual, elimina el combo
             if cantidad >= orden["combos"][combo_seleccionado]:
@@ -201,7 +201,7 @@ class GestionOrdenes(CrearUsuario, GestionAlimento, GestionCombo):
         #actualiza la orden en la base de datos
             db_ordenes[usuario][id_orden] = orden
         else:
-            print("El combo ingresado no está en la orden.")
+            print("El combo ingresado no esta en la orden.")
 
     #funcion para incluir un alimento en una orden
     def incluir_alimento(self, usuario, id_orden, db_ordenes):
@@ -228,7 +228,7 @@ class GestionOrdenes(CrearUsuario, GestionAlimento, GestionCombo):
                         cantidad = int(input("Ingrese la cantidad de este alimento: "))
                         break  #rompe el bucle si la entrada es válida
                     except ValueError:
-                        print("Error: Debe ingresar un número entero para la cantidad.")
+                        print("Error: Debe ingresar un numero entero para la cantidad.")
 
                 #si el alimento ya está en la orden, aumenta la cantidad
                 if alimento_seleccionado in orden["alimentos"]:
@@ -238,7 +238,7 @@ class GestionOrdenes(CrearUsuario, GestionAlimento, GestionCombo):
 
                 #actualiza la orden en la base de datos
                 db_ordenes[usuario][id_orden] = orden
-                print(f"Alimento '{alimento_seleccionado}' incluido con éxito en la orden.")
+                print(f"Alimento '{alimento_seleccionado}' incluido con exito en la orden.")
             else:
                 print("El alimento ingresado no existe. Intente de nuevo.")
 
@@ -278,7 +278,7 @@ class GestionOrdenes(CrearUsuario, GestionAlimento, GestionCombo):
             #actualiza la orden con la nueva cantidad de alimentos
             db_ordenes[usuario][id_orden] = orden
         else:
-            print("El alimento ingresado no está en la orden.")
+            print("El alimento ingresado no esta en la orden.")
 
     #funcion para consultar las ordenes de un usuario
     def consultar_ordenes(self):
@@ -290,7 +290,7 @@ class GestionOrdenes(CrearUsuario, GestionAlimento, GestionCombo):
 
         #abre la base de datos de ordenes para mostrar todas las ordenes del usuario 'x'
         with shelve.open(self.ordenes_db_name) as db_ordenes:
-            print(f"\n--- Órdenes del usuario '{usuario}' ---")
+            print(f"\n--- Ordenes del usuario '{usuario}' ---")
             if usuario in db_ordenes:
                 for id_orden, datos in db_ordenes[usuario].items():
                     print(f"\nID Orden: {id_orden}")
@@ -303,7 +303,7 @@ class GestionOrdenes(CrearUsuario, GestionAlimento, GestionCombo):
                         print(f" - {alimento}: {cantidad}")
                     print(f"Facturada: {'Sí' if datos['facturada'] else 'No'}")
             else:
-                print("No se encontraron órdenes para este usuario.")
+                print("No se encontraron ordenes para este usuario.")
             print("\nConsulta completada.")
 
 #funcion para facturar una orden
@@ -354,15 +354,15 @@ class GestionOrdenes(CrearUsuario, GestionAlimento, GestionCombo):
 #menu principal para gestionar las ordenes
     def menu_ordenes(self):
         while True:
-            print("\n--- Menú de Gestión de Órdenes ---")
+            print("\n--- Menu de Gestión de Órdenes ---")
             print("1. Crear Orden")
             print("2. Editar Orden")
-            print("3. Consultar Órdenes")
+            print("3. Consultar Ordenes")
             print("4. Facturar Orden")
             print("5. Eliminar Orden")
             print("6. Volver al Menu Administrativo")
 
-            opcion = input("Seleccione una opción: ")
+            opcion = input("Seleccione una opcion: ")
 
             if opcion == "1":
                 self.crear_orden()
@@ -377,7 +377,7 @@ class GestionOrdenes(CrearUsuario, GestionAlimento, GestionCombo):
                         if id_orden in ordenes:
                             self.editar_orden(usuario,id_orden)
                         else:
-                            print("Orden no válida seleccionada.")
+                            print("Orden no valida seleccionada.")
                             
                             
             elif opcion == "3":
@@ -393,7 +393,7 @@ class GestionOrdenes(CrearUsuario, GestionAlimento, GestionCombo):
                         if id_orden in ordenes:
                             self.facturar_orden(usuario,id_orden)
                         else:
-                            print("Orden no válida seleccionada.")
+                            print("Orden no valida seleccionada.")
                             
                             
             elif opcion == "5":
@@ -405,16 +405,16 @@ class GestionOrdenes(CrearUsuario, GestionAlimento, GestionCombo):
                         if id_orden in ordenes:
                             self.eliminar_orden(usuario,id_orden)
                         else:
-                            print("Orden no válida seleccionada.")
+                            print("Orden no valida seleccionada.")
                             
                             
             elif opcion == "6":
                 print("Volviendo al Menu Administrativo...")
                 break
             else:
-                print("Opción no válida. Intente de nuevo.")
+                print("Opcion no valida. Intente de nuevo.")
 
-# Ejemplo de uso
+
 if __name__ == "__main__":
     gestion_ordenes = GestionOrdenes()
     gestion_ordenes.menu_ordenes()

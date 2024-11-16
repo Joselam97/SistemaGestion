@@ -43,7 +43,7 @@ class CrearUsuario:
                 print("\nUsuarios registrados:")
                 for nombre_usuario, datos in db_usuarios.items():
                     print(f"- Usuario: {nombre_usuario}, Nombre: {datos['nombre']}, "
-                          f"Fecha de nacimiento: {datos['fecha_nacimiento']}, Puntos: {datos['puntos']}")
+                          f"Fecha de nacimiento: {datos['fecha_nacimiento']}")
                     
     #funcion para eliminar usuarios
     def eliminar_usuario(self, nombre_usuario):
@@ -60,46 +60,50 @@ class CrearUsuario:
             return nombre_usuario in db_usuarios
 
 #ejemplo de uso del menu 
+    def menu_usuarios(self):
+
+        while True:
+            print("\n--- Menu de Creación de Usuarios ---")
+            print("1. Crear nuevo usuario")
+            print("2. Mostrar usuarios")
+            print("3. Eliminar usuarios")
+            print("4. Volver al Menu General")
+    
+            opcion = input("Seleccione una opcion: ")
+    
+            if opcion == "1":
+                #implementa un bucle para regresar en caso de se escriba 'volver'
+                while True:
+                    nombre_usuario = input("Ingrese el nombre de usuario (o 'volver'): ")
+                    if nombre_usuario.lower() == 'volver':
+                       break
+                    nombre = input("Ingrese el nombre: ")
+                    fecha_nacimiento = input("Ingrese la fecha de nacimiento (formato DD-MM-YYYY): ")
+    
+                    gestion_usuarios.crear_usuario(nombre_usuario, nombre, fecha_nacimiento)
+
+            elif opcion == "2":
+                gestion_usuarios.mostrar_usuarios()
+            
+            
+            elif opcion == "3":
+                #implementa un bucle para regresar en caso de se escriba 'volver'
+                while True:
+                    gestion_usuarios.mostrar_usuarios()
+                    print("\n --- Usuarios a eliminar --- \n")
+                    nombre_usuario = input("Ingrese el nombre de usuario a eliminar (o 'volver'): ")
+                    if nombre_usuario.lower() == 'volver':
+                        break
+                    gestion_usuarios.eliminar_usuario(nombre_usuario)
+
+            elif opcion == "4":
+                print("Volviendo al Menu General...")
+                break
+
+            else:
+                print("Opcion no valida, intente de nuevo.")
+            
+            
 if __name__ == "__main__":
     gestion_usuarios = CrearUsuario()
-
-    while True:
-        print("\n--- Menú de Creación de Usuarios ---")
-        print("1. Crear nuevo usuario")
-        print("2. Mostrar usuarios")
-        print("3. Eliminar usuarios")
-        print("4. Volver al Menu General")
-
-        opcion = input("Seleccione una opción: ")
-
-        if opcion == "1":
-            #implementa un bucle para regresar en caso de se escriba 'volver'
-            while True:
-                nombre_usuario = input("Ingrese el nombre de usuario (o 'volver'): ")
-                if nombre_usuario.lower() == 'volver':
-                   break
-                nombre = input("Ingrese el nombre: ")
-                fecha_nacimiento = input("Ingrese la fecha de nacimiento (formato DD-MM-YYYY): ")
-
-                gestion_usuarios.crear_usuario(nombre_usuario, nombre, fecha_nacimiento)
-
-        elif opcion == "2":
-            gestion_usuarios.mostrar_usuarios()
-            
-            
-        elif opcion == "3":
-            #implementa un bucle para regresar en caso de se escriba 'volver'
-            while True:
-                gestion_usuarios.mostrar_usuarios()
-                print("\n --- Usuarios a eliminar --- \n")
-                nombre_usuario = input("Ingrese el nombre de usuario a eliminar (o 'volver'): ")
-                if nombre_usuario.lower() == 'volver':
-                    break
-                gestion_usuarios.eliminar_usuario(nombre_usuario)
-
-        elif opcion == "4":
-            print("Volviendo al Menu General...")
-            break
-
-        else:
-            print("Opción no válida, intente de nuevo.")
+    gestion_usuarios.menu_usuarios()
