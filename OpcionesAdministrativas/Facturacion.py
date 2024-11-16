@@ -155,29 +155,34 @@ class Facturacion:
                 print("Factura no encontrada.")
 
     def reporte_ventas(self, fecha_inicio, fecha_fin):
+        # Convierte las fechas de inicio y fin en objetos de fecha
         fecha_inicio = datetime.strptime(fecha_inicio, '%Y-%m-%d')
         fecha_fin = datetime.strptime(fecha_fin, '%Y-%m-%d')
-        cantidad_facturas = costo_facturado = subtotal_facturado = impuesto_recaudado = 0
+        cantidad_facturas = total_facturado = subtotal_facturado = impuesto_recaudado = 0
         vendedores = {}
     
+        # Abre la base de datos de facturas para iterar sobre ellas
         with shelve.open(self.facturas_db_name) as db_facturas:
             for id_factura, factura in db_facturas.items():
                 factura_fecha = factura['fecha_hora']
                 if isinstance(factura_fecha, str):
                     factura_fecha = datetime.strptime(factura_fecha, '%Y-%m-%d %H:%M:%S')
 
+                # Verifica si la fecha de la factura está dentro del rango especificado
                 if fecha_inicio <= factura_fecha <= fecha_fin:
                     cantidad_facturas += 1
                     subtotal_facturado += factura['subtotal']
                     impuesto_recaudado += factura['total_impuesto']
-                    costo_facturado += factura['total']
+                    total_facturado += factura['total']  # Suma el total después del impuesto
                     usuario = factura['usuario']
+                    # Cuenta la cantidad de facturas por cada vendedor (usuario)
                     vendedores[usuario] = vendedores.get(usuario, 0) + 1
 
-        ganancia = subtotal_facturado - costo_facturado
+        # Corrige el cálculo de la ganancia para evitar negativos
+        ganancia = subtotal_facturado  # Consideramos que la ganancia real es el subtotal facturado
         print(f"\n--- Resumen de Ventas ---")
         print(f"Cantidad de facturas en rango: {cantidad_facturas}")
-        print(f"Costo facturado: {costo_facturado}")
+        print(f"Total facturado: {total_facturado}")
         print(f"Subtotal facturado: {subtotal_facturado}")
         print(f"Ganancia: {ganancia}")
         print(f"Impuesto recaudado: {impuesto_recaudado}")
