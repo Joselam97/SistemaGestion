@@ -1,16 +1,32 @@
+from GestionTipoAlimento import GestionTipoAlimento, menu_tipo_alimento
+from GestionAlimento import GestionAlimento, menu_alimento
+from GestionCombos import GestionCombo, menu_combo
+from GestionOrdenes import GestionOrdenes
+from Facturacion import Facturacion
+
+
 
 
 class OpcionesAdministrativas:
+    def __init__(self, menu_principal):
+        # Guarda una referencia al menú principal
+        self.menu_principal = menu_principal
+        self.gestion_tipo_alimento = GestionTipoAlimento()
+        self.gestion_alimento = GestionAlimento()
+        self.gestion_combo = GestionCombo()
+        self.gestion_ordenes = GestionOrdenes()
+        self.gestion_facturas = Facturacion()
+        
+
     #Muestra las opciones del menu de opciones administrativas
     def mostrar_opciones_administrativas(self):
-        print("---- Opciones Administrativas ----")
+        print("\n---- Opciones Administrativas ----")
         print("1. Gestion de Tipo de Alimentos")
         print("2. Gestion de Alimentos")
         print("3. Gestion de Combos")
         print("4. Gestion de Ordenes")
         print("5. Facturar")
-        print("6. Reporte de Ventas")
-        print("7. Volver al Menú Principal")
+        print("6. Volver al Menú Principal")
         
     def main(self):
         while True:
@@ -20,25 +36,26 @@ class OpcionesAdministrativas:
         
 #Me permite moverme a las diferentes opciones 'classes' dentro del menu Administrativo
             if opcion == "1":
-                print("1. Gestion de Tipo de Alimentos")
+                print("\n Menu de Tipo de Alimentos...")
+                menu_tipo_alimento()
             elif opcion == "2":
-                print("2. Gestion de Alimentos")
+                print("\n Menu de Alimentos...")
+                menu_alimento(self.gestion_alimento)
             elif opcion == "3":
-                print("3. Gestion de Combos")
+                print("\n Menu de Combos...")
+                menu_combo(self.gestion_alimento)
             elif opcion == "4":
-                print("4. Gestion de Ordenes")
+                print("\n Menu de Ordenes...")
+                self.gestion_ordenes.menu_ordenes()
             elif opcion == "5":
-                print("5. Facturar")
+                print("\n Menu Facturacion...")
+                self.gestion_facturas.menu_facturacion()
             elif opcion == "6":
-                print("6. Reporte de Ventas")
-            elif opcion == "7":
-                print("Volviendo al Menu Principal...")
-                #El break sera solo mientras no he asociado los menus
-                break
+                print("\n Volviendo al Menu Principal...")
+                return
             else:
-                print("Opcion no válida, intenta de nuevo.")
+                print("\nOpcion no válida, intenta de nuevo.")
             
-            
-if __name__ == "__main__":
-    menuAdministrativo = OpcionesAdministrativas()
-    menuAdministrativo.main()
+#if __name__ == "__main__":
+#    menu_administrativo = OpcionesAdministrativas(menu_principal)
+#    menu_administrativo.main()

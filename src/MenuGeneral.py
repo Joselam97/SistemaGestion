@@ -1,8 +1,11 @@
 class OpcionesGenerales:
+    def __init__(self, menu_principal):
+        # Guarda una referencia al menú principal
+        self.menu_principal = menu_principal
     
     #Muestra las opciones del menu de opciones generales
     def mostrar_opciones_generales(self):
-        print("---- Opciones Generales ----")
+        print("\n---- Opciones Generales ----")
         print("1. Crear Usuario")
         print("2. Consultar Alimentos")
         print("3. Consulta de puntos e historico de redenciones")
@@ -17,19 +20,17 @@ class OpcionesGenerales:
                 
 #Me permite moverme a las diferentes opciones 'classes' dentro del menu General
             if opcion == "1":
-                print("1. Crear Usuario")
+                print(" Creando Usuario...")
             elif opcion == "2":
-                print("2. Consultar Alimentos")
+                print(" Consultando Alimentos...")
             elif opcion == "3":
-                print("3. Consulta de Puntos e Historico de Redenciones")
+                print(" Consultando de Puntos e Historico de Redenciones...")
             elif opcion == "4":
-                print("4. Consulta de Ordenes")
+                print(" Consultando de Ordenes...")
             elif opcion == "5":
-                print("Volviendo al Menu Principal...")
-                break
+                print(" Volviendo al Menu Principal...")
+                self.menu_principal.main()
+                return
             else:
                 print("Opcion no valida, intenta de nuevo!")
                     
-if __name__ == "__main__":
-    menuGeneral = OpcionesGenerales()
-    menuGeneral.main()

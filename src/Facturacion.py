@@ -218,7 +218,7 @@ class Facturacion:
             opcion = input("Seleccione una opcion: ")
 
             if opcion == "1":
-                usuario = input("Ingrese su nombre de usuario: ")
+                usuario = input("\nIngrese su nombre de usuario: ")
                 if self.crear_usuario.verificar_usuario(usuario):
                     #obtiene las facturas del usurio
                     ordenes = self.gestion_ordenes.mostrar_ordenes_usuario(usuario, facturadas=False)
@@ -230,12 +230,12 @@ class Facturacion:
                             print("Orden no valida seleccionada.")
 
             elif opcion == "2":
-                usuario = input("Ingrese su nombre de usuario: ")
+                usuario = input("\nIngrese su nombre de usuario: ")
                 if self.crear_usuario.verificar_usuario(usuario):
                     #muestra las facturas existen del usuario
                     facturas = self.mostrar_facturas_usuario(usuario)
                     if facturas:
-                        id_factura = input("Ingrese el identificador de la factura a consultar: ")
+                        id_factura = input("\nIngrese el identificador de la factura a consultar: ")
                         if id_factura in facturas:
                             self.consultar_factura(id_factura)
                         else:
@@ -243,22 +243,22 @@ class Facturacion:
 
             elif opcion == "3":
                 try:
-                    fecha_inicio = input("Ingrese la fecha de inicio (YYYY-MM-DD): ")
+                    fecha_inicio = input("\nIngrese la fecha de inicio (YYYY-MM-DD): ")
                     fecha_fin = input("Ingrese la fecha de fin (YYYY-MM-DD): ")
                     self.reporte_ventas(fecha_inicio, fecha_fin)
                 except ValueError:
                     print("Fecha no valida. Intente de nuevo en el formato YYYY-MM-DD.")
 
             elif opcion == "4":
-                print("Volviendo al Menu Administrativo...")
+                print("\n Volviendo al Menu Administrativo...")
                 break
 
             else:
-                print("Opcion no valida. Intente de nuevo.")
+                print("\n Opcion no valida. Intente de nuevo.")
 
 #ejemplo de uso
-if __name__ == "__main__":
-    #guarda todas las funciones  una variable
-    facturacion = Facturacion()
-    #inicializa el menu_facturacion que contiene todas las funciones de facturacion
-    facturacion.menu_facturacion()
+#if __name__ == "__main__":
+#    #guarda todas las funciones  una variable
+#    facturacion = Facturacion()
+#    #inicializa el menu_facturacion que contiene todas las funciones de facturacion
+#    facturacion.menu_facturacion()

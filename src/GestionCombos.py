@@ -259,7 +259,7 @@ def menu_combo(gestion_alimento):
                     try:
                         nuevo_costo = float(nuevo_costo_input)
                     except ValueError:
-                        print("Error: Por favor, ingrese un valor numerico válido para el costo.")
+                        print("Error: Por favor, ingrese un valor numerico valido para el costo.")
 
 #solicita el nuevo margen de ganancia 
             nuevo_margen_ganancia = None
@@ -302,7 +302,7 @@ def menu_combo(gestion_alimento):
                         continue
                     #maneja errores si la entrada no es un numero valido
                 except ValueError:
-                    print("Error: Por favor, ingrese un valor numerico válido para la cantidad.")
+                    print("Error: Por favor, ingrese un valor numerico valido para la cantidad.")
                     continue
 
 #agrega el alimento y la nueva cantidad al diccionario de nuevos alimentos
@@ -318,11 +318,11 @@ def menu_combo(gestion_alimento):
 
 
         elif opcion == "5":
-            print("Volviendo al Menú Administrativo...")
+            print("Volviendo al Menu Administrativo...")
             break
 
         else:
-            print("Opción no válida, intente de nuevo.")
+            print("Opcion no valida, intente de nuevo.")
 
 #inicia el menu
 if __name__ == "__main__":

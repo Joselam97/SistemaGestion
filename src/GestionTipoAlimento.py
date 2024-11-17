@@ -142,11 +142,11 @@ def menu_tipo_alimento():
             gestion.mostrar_tipos()
 
         elif opcion == "5":
-            print("Volviendo al Menu Administrativo...")
+            print("\n Volviendo al Menu Administrativo...")
             break
 
         else:
-            print("Opción no valida, intente de nuevo.")
+            print("\n Opción no valida, intente de nuevo.")
 
 if __name__ == "__main__":
     menu_tipo_alimento()

@@ -103,14 +103,14 @@ class GestionOrdenes(CrearUsuario, GestionAlimento, GestionCombo):
 
             #menu de edicion de la orden
             while True:
-                print("\n--- Edición de Orden ---")
+                print("\n--- Edicion de Orden ---")
                 print("1. Incluir combo")
                 print("2. Disminuir combo")
                 print("3. Incluir alimento")
                 print("4. Disminuir alimento")
                 print("5. Volver al menu principal")
 
-                opcion = input("Seleccione una opción: ")
+                opcion = input("Seleccione una opcion: ")
                 #llama a la funcion correspondiente segun la opcion
                 if opcion == "1":
                     self.incluir_combo(usuario, id_orden, db_ordenes)
@@ -354,7 +354,7 @@ class GestionOrdenes(CrearUsuario, GestionAlimento, GestionCombo):
 #menu principal para gestionar las ordenes
     def menu_ordenes(self):
         while True:
-            print("\n--- Menu de Gestión de Órdenes ---")
+            print("\n--- Menu de Gestion de Ordenes ---")
             print("1. Crear Orden")
             print("2. Editar Orden")
             print("3. Consultar Ordenes")
@@ -409,10 +409,10 @@ class GestionOrdenes(CrearUsuario, GestionAlimento, GestionCombo):
                             
                             
             elif opcion == "6":
-                print("Volviendo al Menu Administrativo...")
+                print("\n Volviendo al Menu Administrativo...")
                 break
             else:
-                print("Opcion no valida. Intente de nuevo.")
+                print("\n Opcion no valida. Intente de nuevo.")
 
 
 if __name__ == "__main__":

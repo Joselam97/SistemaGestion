@@ -149,7 +149,7 @@ class GestionAlimento:
         return False 
 
 #funcion para mostrar el menu de alimento
-def menu_alimento():
+def menu_alimento(gestion_alimento):
     gestion_alimento = GestionAlimento()
     gestion_tipo_alimento = GestionTipoAlimento()
 
@@ -233,11 +233,11 @@ def menu_alimento():
             
 
         elif opcion == "5":
-            print("Volviendo al Menú Administrativo...")
+            print("\n Volviendo al Menú Administrativo...")
             break
 
         else:
-            print("Opción no válida, intente de nuevo.")
+            print("\n Opción no válida, intente de nuevo.")
 
 # Iniciar el menú
 if __name__ == "__main__":
