@@ -27,7 +27,7 @@ class OpcionesGenerales:
         print("2. Consultar Alimentos")
         print("3. Consulta de puntos e historico de redenciones")
         print("4. Consulta de ordenes")
-        print("5. Volver al Menú Principal")
+        print("5. Volver al Menu Principal")
         
         
     def main(self):

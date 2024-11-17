@@ -23,7 +23,7 @@ class OpcionesAdministrativas:
         print("3. Gestion de Combos")
         print("4. Gestion de Ordenes")
         print("5. Facturar")
-        print("6. Volver al Menú Principal")
+        print("6. Volver al Menu Principal")
         
         
     def main(self):

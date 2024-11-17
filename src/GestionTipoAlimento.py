@@ -52,13 +52,17 @@ class GestionTipoAlimento:
             if descripcion not in db:
                 print(f"\nError: El tipo de alimento '{descripcion}' no existe.")
                 return
+            
             tipo_alimento = db[descripcion]
+            
             #Si la descripcion del origen existe se modifica
             if nuevo_origen is not None:
                 tipo_alimento['origen'] = nuevo_origen
+                
             #Si la descripcion del gluten existe se modifica
             if nuevo_libre_gluten is not None:
                 tipo_alimento['libre_gluten'] = nuevo_libre_gluten
+                
             #se agrega a la base de datos
             db[descripcion] = tipo_alimento
             print(f"\nTipo de alimento '{descripcion}' modificado con éxito.")
@@ -135,7 +139,14 @@ def menu_tipo_alimento():
             descripcion = input("\nIngrese la descripción del tipo de alimento a modificar: ")
             nuevo_origen = input("Ingrese el nuevo origen (dejar en blanco si no desea cambiar): ") or None
             libre_gluten_input = input("¿Es libre de gluten? (si/no, deje en blanco si no desea cambiar): ")
-            nuevo_libre_gluten = None if libre_gluten_input == 'no' else libre_gluten_input.lower() == 'si'
+            
+            if libre_gluten_input.lower() == 'si':
+                nuevo_libre_gluten = True
+            elif libre_gluten_input.lower() == 'no':
+                nuevo_libre_gluten = False
+            else:
+                nuevo_libre_gluten = None
+                
             gestion.modificar_tipo(descripcion, nuevo_origen, nuevo_libre_gluten)
 
         elif opcion == "4":
