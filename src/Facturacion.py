@@ -255,10 +255,3 @@ class Facturacion:
 
             else:
                 print("\n Opcion no valida. Intente de nuevo.")
-
-#ejemplo de uso
-#if __name__ == "__main__":
-#    #guarda todas las funciones  una variable
-#    facturacion = Facturacion()
-#    #inicializa el menu_facturacion que contiene todas las funciones de facturacion
-#    facturacion.menu_facturacion()

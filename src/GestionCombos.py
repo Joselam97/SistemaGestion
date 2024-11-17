@@ -29,6 +29,10 @@ class GestionCombo:
                 print("Error: El margen de ganancia debe estar entre 0 y 100.")
                 return
             
+            if not alimentos:
+               print(f"Error: No se puede crear el combo '{nombre}' sin alimentos incluidos.")
+               return
+            
             #en caso de cumplir con los requisitos, solicita la info para agregar al combo
             precio_venta = costo * (1 + margen_ganancia / 100)
             #diccionario de la informacion del alimento para guardar en 'db_combos'
@@ -157,7 +161,7 @@ def menu_combo(gestion_alimento):
         opcion = input("Seleccione una opcion: ")
 
         if opcion == "1":
-            nombre = input("Ingrese el nombre del combo: ").strip()
+            nombre = input("\nIngrese el nombre del combo: ").strip()
     
     
 
@@ -205,7 +209,7 @@ def menu_combo(gestion_alimento):
             alimentos = {}
             while True:
                 #solicita el nombre de alimento a incluir en el combo
-                nombre_alimento = input("Ingrese el nombre del alimento a incluir en el combo (o 'terminar'): ").strip()
+                nombre_alimento = input("\nIngrese el nombre del alimento a incluir en el combo (o 'terminar'): ").strip()
                 if nombre_alimento.lower() == 'terminar':
                     #sale del bucle si se ingresa 'terminar'
                     break
@@ -323,12 +327,3 @@ def menu_combo(gestion_alimento):
 
         else:
             print("Opcion no valida, intente de nuevo.")
-
-#inicia el menu
-if __name__ == "__main__":
-      
-
-#gestion_alimento es la variable que almacena la clase 'GestionAlimento' para usarla e importar datos
-    gestion_alimento = GestionAlimento()
-    #llama al menu de gestion de combos pasando la instancia de alimentos
-    menu_combo(gestion_alimento)

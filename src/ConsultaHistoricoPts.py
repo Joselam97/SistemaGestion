@@ -67,8 +67,3 @@ class ConsultaHistoricoPts(CrearUsuario, Facturacion):
                 break
             else:
                 print("Opción no valida, intente de nuevo.")
-
-# Ejemplo de uso del menú
-if __name__ == "__main__":
-    consulta_historial = ConsultaHistoricoPts()
-    consulta_historial.menu_consulta_historial()

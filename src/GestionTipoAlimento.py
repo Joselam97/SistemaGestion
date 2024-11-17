@@ -147,6 +147,3 @@ def menu_tipo_alimento():
 
         else:
             print("\n Opción no valida, intente de nuevo.")
-
-if __name__ == "__main__":
-    menu_tipo_alimento()

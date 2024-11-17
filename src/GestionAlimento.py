@@ -159,7 +159,7 @@ def menu_alimento(gestion_alimento):
         print("2. Eliminar Alimento")
         print("3. Modificar Alimento")
         print("4. Mostrar Alimentos")
-        print("5. Volver al Menu General")
+        print("5. Volver al Menu Administrativo")
 
         opcion = input("Seleccione una opcion: ")
 
@@ -169,7 +169,7 @@ def menu_alimento(gestion_alimento):
             gestion_tipo_alimento.mostrar_tipos()
             
             while True:
-                tipo = input("Ingrese el tipo de alimento (o 'volver'): ")
+                tipo = input("\nIngrese el tipo de alimento (o 'volver'): ")
 
                 #.lower() sirve para que la entrada sea case-insensitive
                 if tipo.lower() == 'volver':
@@ -238,7 +238,3 @@ def menu_alimento(gestion_alimento):
 
         else:
             print("\n Opción no válida, intente de nuevo.")
-
-# Iniciar el menú
-if __name__ == "__main__":
-    menu_alimento()

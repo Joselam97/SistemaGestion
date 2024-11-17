@@ -4,12 +4,9 @@ from GestionCombos import GestionCombo, menu_combo
 from GestionOrdenes import GestionOrdenes
 from Facturacion import Facturacion
 
-
-
-
 class OpcionesAdministrativas:
     def __init__(self, menu_principal):
-        # Guarda una referencia al menú principal
+        #constructor para las clases con las que interactuara el menu
         self.menu_principal = menu_principal
         self.gestion_tipo_alimento = GestionTipoAlimento()
         self.gestion_alimento = GestionAlimento()
@@ -28,6 +25,7 @@ class OpcionesAdministrativas:
         print("5. Facturar")
         print("6. Volver al Menú Principal")
         
+        
     def main(self):
         while True:
             #Me muestra las opciones del menu de OpcionesAdministrativas
@@ -38,24 +36,26 @@ class OpcionesAdministrativas:
             if opcion == "1":
                 print("\n Menu de Tipo de Alimentos...")
                 menu_tipo_alimento()
+                
             elif opcion == "2":
                 print("\n Menu de Alimentos...")
                 menu_alimento(self.gestion_alimento)
+                
             elif opcion == "3":
                 print("\n Menu de Combos...")
                 menu_combo(self.gestion_alimento)
+                
             elif opcion == "4":
                 print("\n Menu de Ordenes...")
                 self.gestion_ordenes.menu_ordenes()
+                
             elif opcion == "5":
                 print("\n Menu Facturacion...")
                 self.gestion_facturas.menu_facturacion()
+                
             elif opcion == "6":
                 print("\n Volviendo al Menu Principal...")
                 return
+            
             else:
                 print("\nOpcion no válida, intenta de nuevo.")
-            
-#if __name__ == "__main__":
-#    menu_administrativo = OpcionesAdministrativas(menu_principal)
-#    menu_administrativo.main()

@@ -30,7 +30,7 @@ class MenuPrincipal:
                 #print("2. Opciones Generales")
                 self.menu_generales.main()
             elif opcion == "3":
-                print("\n Saliendo del sistema...")
+                print("\n Saliendo del sistema...\n")
                 break
             else:
                 print("\n Indique una opcion valida!")

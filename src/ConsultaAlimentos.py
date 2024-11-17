@@ -77,13 +77,3 @@ class ConsultaAlimento:
                 break
             else:
                 print("Opción no válida, por favor selecciona nuevamente.")
-
-#ejmplo para usar y asignacion de variables para cada clase
-if __name__ == "__main__":
-    gestion_alimento = GestionAlimento()  
-    gestion_combo = GestionCombo(gestion_alimento=gestion_alimento)  
-    gestion_tipo = GestionTipoAlimento()  
-    consulta_alimento = ConsultaAlimento(gestion_alimento, gestion_combo, gestion_tipo)
-
-    consulta_alimento.menu_consulta_alimentos()
-

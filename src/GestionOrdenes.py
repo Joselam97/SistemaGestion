@@ -413,8 +413,3 @@ class GestionOrdenes(CrearUsuario, GestionAlimento, GestionCombo):
                 break
             else:
                 print("\n Opcion no valida. Intente de nuevo.")
-
-
-if __name__ == "__main__":
-    gestion_ordenes = GestionOrdenes()
-    gestion_ordenes.menu_ordenes()

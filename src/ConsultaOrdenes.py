@@ -86,9 +86,3 @@ class ConsultaOrdenes(GestionOrdenes):
                 break
             else:
                 print("Opcion no valida. Intente de nuevo.")
-
-#ejemplo de uso
-if __name__ == "__main__":
-    #crea una instancia de ConsultaOrdenes y muestra el menu de consulta de ordenes
-    consulta_ordenes = ConsultaOrdenes()
-    consulta_ordenes.menu_consulta_ordenes()

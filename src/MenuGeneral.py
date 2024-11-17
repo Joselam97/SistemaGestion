@@ -1,7 +1,24 @@
+from CrearUsuario import CrearUsuario
+from ConsultaAlimentos import ConsultaAlimento
+from GestionAlimento import GestionAlimento
+from GestionCombos import GestionCombo
+from GestionTipoAlimento import GestionTipoAlimento
+from ConsultaHistoricoPts import ConsultaHistoricoPts
+from ConsultaOrdenes import ConsultaOrdenes
+
 class OpcionesGenerales:
     def __init__(self, menu_principal):
-        # Guarda una referencia al menú principal
+        #constructor para las clases con las que interactuara el menu
         self.menu_principal = menu_principal
+        self.crear_usuario = CrearUsuario()
+        self.consulta_alimento = ConsultaAlimento(
+            gestion_alimento=GestionAlimento(),
+            gestion_combo=GestionCombo(),
+            gestion_tipo=GestionTipoAlimento()
+        )
+        self.consulta_historico_pts = ConsultaHistoricoPts()
+        self.consulta_ordenes = ConsultaOrdenes()
+    
     
     #Muestra las opciones del menu de opciones generales
     def mostrar_opciones_generales(self):
@@ -12,6 +29,7 @@ class OpcionesGenerales:
         print("4. Consulta de ordenes")
         print("5. Volver al Menú Principal")
         
+        
     def main(self):
         while True:
             #Muestra las opciones del menu de OpcionesGenerales
@@ -20,17 +38,25 @@ class OpcionesGenerales:
                 
 #Me permite moverme a las diferentes opciones 'classes' dentro del menu General
             if opcion == "1":
-                print(" Creando Usuario...")
+                print("\n Creacion Usuario...")
+                self.crear_usuario.menu_usuarios()
+                
             elif opcion == "2":
-                print(" Consultando Alimentos...")
+                print("\n Consultando Alimentos...")
+                self.consulta_alimento.menu_consulta_alimentos()
+                
             elif opcion == "3":
-                print(" Consultando de Puntos e Historico de Redenciones...")
+                print("\n Consultando de Puntos e Historico de Redenciones...")
+                self.consulta_historico_pts.menu_consulta_historial()
+                
             elif opcion == "4":
-                print(" Consultando de Ordenes...")
+                print("\n Consultando de Ordenes...")
+                self.consulta_ordenes.menu_consulta_ordenes()
+                
             elif opcion == "5":
-                print(" Volviendo al Menu Principal...")
-                self.menu_principal.main()
+                print("\n Volviendo al Menu Principal...")
                 return
+            
             else:
-                print("Opcion no valida, intenta de nuevo!")
+                print("\n Opcion no valida, intenta de nuevo!")
                     
