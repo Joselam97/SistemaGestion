@@ -220,12 +220,44 @@ def menu_alimento(gestion_alimento):
                 print("Operación cancelada. Volviendo al menú de gestión de alimentos.")
                 continue
             
+            # Validación para nuevo tipo de alimento
             nuevo_tipo = input("Ingrese el nuevo tipo de alimento (deje en blanco si no desea cambiar): ")
-            nuevo_tipo = nuevo_tipo if nuevo_tipo else None
-            nuevo_costo_compra = input("Ingrese el nuevo costo de compra (deje en blanco si no desea cambiar): ")
-            nuevo_costo_compra = float(nuevo_costo_compra) if nuevo_costo_compra else None
-            nuevo_margen_ganancia = input("Ingrese el nuevo margen de ganancia (en %, deje en blanco si no desea cambiar): ")
-            nuevo_margen_ganancia = float(nuevo_margen_ganancia) if nuevo_margen_ganancia else None
+            if nuevo_tipo:
+                if not gestion_tipo_alimento.existe_tipo(nuevo_tipo):
+                    print(f"Error: El tipo de alimento '{nuevo_tipo}' no existe. Intente de nuevo.")
+                    continue
+            else:
+                nuevo_tipo = None
+            
+            # Validación para nuevo costo de compra
+            while True:
+                nuevo_costo_compra = input("Ingrese el nuevo costo de compra (deje en blanco si no desea cambiar): ")
+                if nuevo_costo_compra:
+                    try:
+                        nuevo_costo_compra = float(nuevo_costo_compra)
+                        break
+                    except ValueError:
+                        print("Error: El costo de compra debe ser un número. Inténtalo de nuevo.")
+                else:
+                    nuevo_costo_compra = None
+                    break
+            
+            # Validación para nuevo margen de ganancia
+            while True:
+                nuevo_margen_ganancia = input("Ingrese el nuevo margen de ganancia (en %, deje en blanco si no desea cambiar): ")
+                if nuevo_margen_ganancia:
+                    try:
+                        nuevo_margen_ganancia = float(nuevo_margen_ganancia)
+                        if 0 <= nuevo_margen_ganancia <= 100:
+                            break
+                        else:
+                            print("Error: El margen de ganancia debe estar entre 0 y 100.")
+                    except ValueError:
+                        print("Error: El margen de ganancia debe ser un número. Inténtalo de nuevo.")
+                else:
+                    nuevo_margen_ganancia = None
+                    break
+            
             gestion_alimento.modificar_alimento(nombre, nuevo_tipo, nuevo_costo_compra, nuevo_margen_ganancia)
 
         elif opcion == "4":

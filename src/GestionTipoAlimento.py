@@ -93,7 +93,7 @@ class GestionTipoAlimento:
             encontrados = False
             for descripcion, datos in db.items():
                 if datos['origen'].lower() == origen_filtro.lower():
-                    libre_gluten = 'sí' if datos['libre_gluten'] else 'no'
+                    libre_gluten = 'si' if datos['libre_gluten'] else 'no'
                     print(f"- {descripcion}: Libre de gluten: {libre_gluten}")
                     encontrados = True
             if not encontrados:
