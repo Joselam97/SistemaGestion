@@ -9,7 +9,7 @@ class GestionAlimento:
         
         
     def obtener_info_alimento(self, nombre):
-        """Devuelve los detalles de un alimento, incluyendo precio_venta si está disponible."""
+        #Devuelve los detalles de un alimento, incluyendo precio_venta si está disponible
         with shelve.open(self.db_name) as db_alimentos:
             if nombre in db_alimentos:
                 return db_alimentos[nombre]

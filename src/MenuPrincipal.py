@@ -22,7 +22,7 @@ class MenuPrincipal:
             self.mostrar_menu_principal()
             opcion = input("Selecciona una opción: ")
             
-            #Supongo que aca incerto las funciones para moverme a las diferentes clases
+            
             if opcion == "1":
                 #print("1. Opciones Administrativas")
                 self.menu_administrativas.main()
@@ -30,7 +30,7 @@ class MenuPrincipal:
                 #print("2. Opciones Generales")
                 self.menu_generales.main()
             elif opcion == "3":
-                print("\n Saliendo del sistema...\n")
+                print("\n Saliendo del programa...\n")
                 break
             else:
                 print("\n Indique una opcion valida!")

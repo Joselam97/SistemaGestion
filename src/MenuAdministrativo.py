@@ -55,7 +55,7 @@ class OpcionesAdministrativas:
                 
             elif opcion == "6":
                 print("\n Volviendo al Menu Principal...")
-                return
+                break
             
             else:
                 print("\nOpcion no válida, intenta de nuevo.")

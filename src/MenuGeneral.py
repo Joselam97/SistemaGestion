@@ -55,7 +55,7 @@ class OpcionesGenerales:
                 
             elif opcion == "5":
                 print("\n Volviendo al Menu Principal...")
-                return
+                break
             
             else:
                 print("\n Opcion no valida, intenta de nuevo!")

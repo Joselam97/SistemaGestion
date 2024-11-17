@@ -9,7 +9,7 @@ class GestionCombo:
         
     
     def obtener_info_combo(self, nombre):
-        """Devuelve el precio de venta y detalles del combo."""
+        #Devuelve el precio de venta y detalles del combo
         with shelve.open(self.db_name) as db_combos:
             return db_combos.get(nombre, None)
 
