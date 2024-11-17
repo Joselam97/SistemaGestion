@@ -32,6 +32,13 @@ class GestionCombo:
             if not alimentos:
                print(f"Error: No se puede crear el combo '{nombre}' sin alimentos incluidos.")
                return
+           
+           
+            with shelve.open(self.gestion_alimento.db_name) as db_alimentos:
+                for alimento in alimentos:
+                    if alimento not in db_alimentos:
+                        print(f"Error: El alimento '{alimento}' no existe en la lista de alimentos. No se puede crear el combo.")
+                        return
             
             #en caso de cumplir con los requisitos, solicita la info para agregar al combo
             precio_venta = costo * (1 + margen_ganancia / 100)
@@ -161,14 +168,23 @@ def menu_combo(gestion_alimento):
         opcion = input("Seleccione una opcion: ")
 
         if opcion == "1":
-            nombre = input("\nIngrese el nombre del combo: ").strip()
-    
-    
-
+            while True:
+                nombre = input("\nIngrese el nombre del combo (o 'volver' para cancelar): ").strip()
+                if nombre.lower() == 'volver':
+                    print("Operacion cancelada. Volviendo al menu de opciones administrativas.")
+                    return
+                
+                #verifica si el nombre del combo ya existe
+                if gestion_combo.existe_combo(nombre):
+                    print(f"Error: Ya existe un combo con el nombre '{nombre}'. Por favor, elija otro nombre.")
+                else:
+                    #si el nombre es válido, salir del bucle
+                    break
+            
     
             while True:
                 #Solicita el costo del combo y elimina espacios en blanco al inicio y al final
-                costo_input = input("Ingrese el costo del combo: ").strip()
+                costo_input = input("\nIngrese el costo del combo: ").strip()
                 try:
                     #convierte la entrada a float
                     costo = float(costo_input)
@@ -181,13 +197,13 @@ def menu_combo(gestion_alimento):
                     break  
                 #maneja errores si la entrada no es un numero valido
                 except ValueError:
-                    print("Error: Por favor, ingrese un valor numérico valido para el costo.")
-    
+                    print("Error: Por favor, ingrese un valor numerico valido para el costo.")
+           
     
     #bucle para solicitar el margen de ganancia
             while True:
                 #solicita el margen de ganancia y elimina espacios en blanco al incio y final
-                margen_input = input("Ingrese el margen de ganancia (en %): ").strip()
+                margen_input = input("\nIngrese el margen de ganancia (en %): ").strip()
                 try:
                     #convierte la entrada a float
                     margen_ganancia = float(margen_input)
@@ -200,8 +216,8 @@ def menu_combo(gestion_alimento):
                     break  
                 #maneja errores si la entrada no es un numero valido
                 except ValueError:
-                    print("Error: Por favor, ingrese un valor numerico válido para el margen de ganancia.")
-
+                    print("Error: Por favor, ingrese un valor numerico valido para el margen de ganancia.")
+            
     #muestra los alimentos disponibles en la gestion
             gestion_alimento.mostrar_alimentos()
     
@@ -213,10 +229,15 @@ def menu_combo(gestion_alimento):
                 if nombre_alimento.lower() == 'terminar':
                     #sale del bucle si se ingresa 'terminar'
                     break
+                
+                #verifica si el alimento existe en la base de datos de alimentos
+                if not gestion_alimento.obtener_info_alimento(nombre_alimento):
+                    #print(f"Error: El alimento '{nombre_alimento}' no existe en la lista de alimentos. Inténtelo nuevamente.")
+                    continue
         
                 while True:
                     #solicita la cantidad de unidades del alimento a incluir en el combo
-                    cantidad_input = input(f"Ingrese la cantidad de '{nombre_alimento}' a incluir: ").strip()
+                    cantidad_input = input(f"\nIngrese la cantidad de '{nombre_alimento}' a incluir: ").strip()
                     try:
                         #convierte la entrada a entero
                         cantidad = int(cantidad_input)
@@ -229,7 +250,8 @@ def menu_combo(gestion_alimento):
                         break  
                     except ValueError:
                         #maneja errores si la entrada no es un numero valido
-                        print("Error: Por favor, ingrese un valor numérico valido para la cantidad.")
+                        print("Error: Por favor, ingrese un valor numerico valido para la cantidad.")
+        
 
 #agrega el alimento y la cantidad al diccionario de alimentos
                 alimentos[nombre_alimento] = cantidad
@@ -239,7 +261,7 @@ def menu_combo(gestion_alimento):
             
 #eliminacion de un combo
         elif opcion == "2":
-            nombre = input("Ingrese el nombre del combo a eliminar: ")
+            nombre = input("\nIngrese el nombre del combo a eliminar: ")
             gestion_combo.eliminar_combo(nombre)
 
 #modifica combos existenes
@@ -322,8 +344,8 @@ def menu_combo(gestion_alimento):
 
 
         elif opcion == "5":
-            print("Volviendo al Menu Administrativo...")
+            print("\n Volviendo al Menu Administrativo...")
             break
 
         else:
-            print("Opcion no valida, intente de nuevo.")
+            print("\n Opcion no valida, intente de nuevo.")
