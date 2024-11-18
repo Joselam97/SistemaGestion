@@ -93,17 +93,29 @@ class Facturacion:
             descuento = 0
 
             #pregunta para redimir puntos y aplicar descuento
-            try:
-                redimir_puntos = input("¿Desea redimir puntos? (s/n): ").strip().lower() == 's'
-            except ValueError:
-                print("Entrada invalida. Intente nuevamente.")
-                return
+            while True:
+                redimir_puntos_input = input("¿Desea redimir puntos? (s/n): ").strip().lower()
+                if redimir_puntos_input == 's':
+                    redimir_puntos = True
+                    break
+                elif redimir_puntos_input == 'n':
+                    redimir_puntos = False
+                    break
+                else:
+                  print("Error: Entrada invalida. Por favor, ingrese 's' o 'n'.")
+                
 
 #si se redimen puntos, calcula el descuento en la factura y los puntos redimidos
             if redimir_puntos and puntos_disponibles > 0:
                 while True:
                     try:
                         puntos_redimir = int(input(f"Tienes {puntos_disponibles} puntos disponibles. Ingrese la cantidad de puntos a redimir: "))
+                        
+                        #En caso de querer redimir una cantidad de puntos negativa
+                        if puntos_redimir < 0:
+                            print("Error: Debe ingresar solo cantidades positivas de puntos a redimir.")
+                            continue
+                        
                         if puntos_redimir > puntos_disponibles or puntos_redimir * 4.75 > total:
                             puntos_redimir = min(puntos_disponibles, int(total / 4.75))
                         descuento = puntos_redimir * 4.75
@@ -111,6 +123,7 @@ class Facturacion:
                         self.registrar_redencion(usuario, id_factura, puntos_redimir)
                         self.actualizar_puntos_usuario(usuario, -puntos_redimir)
                         break
+                    #en caso de ingresar un string en lugar de valor numerico para redimir pts
                     except ValueError:
                         print("Error: Ingrese un numero entero para los puntos.")
 
