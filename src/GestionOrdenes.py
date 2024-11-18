@@ -148,7 +148,10 @@ class GestionOrdenes(CrearUsuario, GestionAlimento, GestionCombo):
                 while True:
                     try:
                         cantidad = int(input("Ingrese la cantidad de este combo: "))
-                        break  # Sale del bucle si la entrada es válida
+                        if cantidad <= 0:
+                            print("Error: Debe ingresar solo cantidades positivas.")
+                            continue #vuelve a solicitar la cantidad
+                        break  #sale del bucle si la entrada es valida
                     except ValueError:
                         print("Error: Debe ingresar un numero entero para la cantidad.")
 
@@ -185,7 +188,10 @@ class GestionOrdenes(CrearUsuario, GestionAlimento, GestionCombo):
                 try:
                     #solicita la cantidad que desea disminuir y asegura que sea un entero
                     cantidad = int(input("Ingrese la cantidad a disminuir: "))
-                    break  # Sale del bucle si la entrada es válida
+                    if cantidad < 0:
+                        print("Error: Debe ingresar solo cantidades positivas.")
+                        continue
+                    break  #sale del bucle si la entrada es valida
                 except ValueError:
                     print("Error: Debe ingresar un numero entero para la cantidad a disminuir.")
 
@@ -226,7 +232,10 @@ class GestionOrdenes(CrearUsuario, GestionAlimento, GestionCombo):
                     try:
                     #solicita la cantidad y asegura que sea un entero
                         cantidad = int(input("Ingrese la cantidad de este alimento: "))
-                        break  #rompe el bucle si la entrada es válida
+                        if cantidad <= 0:
+                            print("Error: Debe ingresar solo cantidades positivas.")
+                            continue #vuelve a solicitar la cantidad
+                        break  #rompe el bucle si la entrada es valida
                     except ValueError:
                         print("Error: Debe ingresar un numero entero para la cantidad.")
 
@@ -262,7 +271,10 @@ class GestionOrdenes(CrearUsuario, GestionAlimento, GestionCombo):
                 try:
                     #solicita la cantidad que desea disminuir y asegura que sea un entero
                     cantidad = int(input("Ingrese la cantidad a disminuir: "))
-                    break  # Sale del bucle si la entrada es válida
+                    if cantidad < 0:
+                        print("Error: Debe ingresar solo cantidades positivas.")
+                        continue
+                    break  #sale del bucle si la entrada es valida
                 except ValueError:
                     print("Error: Debe ingresar un número entero para la cantidad a disminuir.")
 
