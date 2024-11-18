@@ -49,7 +49,7 @@ class GestionCombo:
                 'precio_venta': precio_venta,
                 'alimentos': alimentos 
             }
-            print(f"Combo '{nombre}' agregado con éxito.")
+            print(f"Combo '{nombre}' agregado con exito.")
 
 
 
@@ -68,12 +68,12 @@ class GestionCombo:
                 return
             
             if self.combo_asociado(nombre):
-                print(f"Error: No se puede eliminar el combo '{nombre}' porque está asociado a una orden o factura.")
+                print(f"Error: No se puede eliminar el combo '{nombre}' porque esta asociado a una orden o factura.")
                 return
             
             #si el combo existe y no esta asociado, lo elimina
             del db_combos[nombre]
-            print(f"Combo '{nombre}' eliminado con éxito.")
+            print(f"Combo '{nombre}' eliminado con exito.")
 
 
 #funcion para modificar combo, en caso de existir el nombre, nuevos costos, margen_ganancia y alimentos no sean null
@@ -91,7 +91,7 @@ class GestionCombo:
                     nuevo_costo = float(nuevo_costo) if nuevo_costo is not None else combo['costo']
                     combo['costo'] = nuevo_costo
                 except ValueError:
-                    print("Error: El costo debe ser un número.")
+                    print("Error: El costo debe ser un numero.")
                     return
 
             #agrega nuevo margen de ganancia despues de la modificaion
@@ -112,13 +112,13 @@ class GestionCombo:
                 for alimento, cantidad in nuevos_alimentos.items():
                     #pide que sea un numero mayor a 0
                     if cantidad < 0:
-                        print(f"Error: La cantidad para el alimento '{alimento}' debe ser un número positivo.")
+                        print(f"Error: La cantidad para el alimento '{alimento}' debe ser un numero positivo.")
                         return
                     #si el alimento se encuentra en el combo lo agrega
                     if alimento in combo['alimentos']:
                         combo['alimentos'][alimento] = cantidad
                     else:
-                        print(f"Error: El alimento '{alimento}' no está en el combo.")
+                        print(f"Error: El alimento '{alimento}' no esta en el combo.")
                         return
 
             #modifica el precio de venta si el costo y margen existen
@@ -127,7 +127,7 @@ class GestionCombo:
 
             #guarda el combo modificado en la base de datos
             db_combos[nombre] = combo
-            print(f"Combo '{nombre}' modificado con éxito.")
+            print(f"Combo '{nombre}' modificado con exito.")
 
 #funcion para mostrar combos guardados
     def mostrar_combos(self):
@@ -158,7 +158,7 @@ def menu_combo(gestion_alimento):
     gestion_combo = GestionCombo(gestion_alimento=gestion_alimento)
 
     while True:
-        print("\n--- Menú de Gestión de Combos ---")
+        print("\n--- Menu de Gestion de Combos ---")
         print("1. Incluir Combo")
         print("2. Eliminar Combo")
         print("3. Modificar Combo")
@@ -304,7 +304,7 @@ def menu_combo(gestion_alimento):
                             nuevo_margen_ganancia = None
                             #maneja el error en caso de ingresar un margen fuera del rango
                     except ValueError:
-                        print("Error: Por favor, ingrese un valor numerico válido para el margen de ganancia.")
+                        print("Error: Por favor, ingrese un valor numerico valido para el margen de ganancia.")
 
 #solicita nuevos alimentos al combo y los guarda en un diccionario
             nuevos_alimentos = {}

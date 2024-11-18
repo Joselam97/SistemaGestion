@@ -80,7 +80,7 @@ class GestionOrdenes(CrearUsuario, GestionAlimento, GestionCombo):
                 #si no se encontraron ordenes, muestra un mensaje indicando el resultado
             if not ordenes_ids:
                 if facturadas:
-                    print("No se encontraron órdenes facturadas.")
+                    print("No se encontraron ordenes facturadas.")
 
         #retorna la lista de identificadores de ordenes
         return ordenes_ids
@@ -276,7 +276,7 @@ class GestionOrdenes(CrearUsuario, GestionAlimento, GestionCombo):
                         continue
                     break  #sale del bucle si la entrada es valida
                 except ValueError:
-                    print("Error: Debe ingresar un número entero para la cantidad a disminuir.")
+                    print("Error: Debe ingresar un numero entero para la cantidad a disminuir.")
 
                 #si la cantidad a disminuir es igual o mayor a la cantidad actual, elimina el alimento
             if cantidad >= orden["alimentos"][alimento_seleccionado]:
@@ -313,7 +313,7 @@ class GestionOrdenes(CrearUsuario, GestionAlimento, GestionCombo):
                     print("Alimentos:")
                     for alimento, cantidad in datos["alimentos"].items():
                         print(f" - {alimento}: {cantidad}")
-                    print(f"Facturada: {'Sí' if datos['facturada'] else 'No'}")
+                    print(f"Facturada: {'Si' if datos['facturada'] else 'No'}")
             else:
                 print("No se encontraron ordenes para este usuario.")
             print("\nConsulta completada.")

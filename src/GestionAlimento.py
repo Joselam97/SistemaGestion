@@ -23,7 +23,7 @@ class GestionAlimento:
         with shelve.open(self.tipo_alimento_db_name) as db_tipos:
             
             if nombre.lower() == 'volver':
-                print("Operacion cancelada. Volviendo al menú anterior.")
+                print("Operacion cancelada. Volviendo al menu anterior.")
                 return
             
             if tipo not in db_tipos:
@@ -65,7 +65,7 @@ class GestionAlimento:
             
             #Regresa en caso de no querer eliminar
             if nombre.lower() == 'volver':
-                print("Operacion cancelada. Volviendo al menú anterior.")
+                print("Operacion cancelada. Volviendo al menu anterior.")
                 return
                 
             #En caso de no estar en la base de datos
@@ -74,11 +74,11 @@ class GestionAlimento:
                 return
             #En caso de estar el alimento asociado a un combo, orden o factura
             if self.alimento_asociado(nombre):
-                print(f"Error: No se puede eliminar el alimento '{nombre}' porque está asociado a un combo, orden o factura.")
+                print(f"Error: No se puede eliminar el alimento '{nombre}' porque esta asociado a un combo, orden o factura.")
                 return
             #En caso de estar el alimento disponible y no asociado a nada para poder eliminarlo
             del db_alimentos[nombre]
-            print(f"Alimento '{nombre}' eliminado con éxito.")
+            print(f"Alimento '{nombre}' eliminado con exito.")
 
 
 #funcion para modificar el alimento
@@ -103,7 +103,7 @@ class GestionAlimento:
                     
                     #Regresa en caso de no querer modificar
                     if nuevo_tipo.lower() == 'volver':
-                        print("Operación cancelada. Volviendo al menú anterior.")
+                        print("Operacion cancelada. Volviendo al menu anterior.")
                         return
                     
                     if nuevo_tipo not in db_tipos:
@@ -123,7 +123,7 @@ class GestionAlimento:
             alimento['precio_venta'] = alimento['costo_compra'] * (1 + alimento['margen_ganancia'] / 100)
             #Busca el nombre para imprimirlo en pantalla e indicar la modificacion
             db_alimentos[nombre] = alimento
-            print(f"Alimento '{nombre}' modificado con éxito.")
+            print(f"Alimento '{nombre}' modificado con exito.")
 
 
 #Funcion para mostrar alimentos guardados
@@ -154,7 +154,7 @@ def menu_alimento(gestion_alimento):
     gestion_tipo_alimento = GestionTipoAlimento()
 
     while True:
-        print("\n--- Menú de Gestión de Alimentos ---")
+        print("\n--- Menu de Gestión de Alimentos ---")
         print("1. Incluir Alimento")
         print("2. Eliminar Alimento")
         print("3. Modificar Alimento")
@@ -173,7 +173,7 @@ def menu_alimento(gestion_alimento):
 
                 #.lower() sirve para que la entrada sea case-insensitive
                 if tipo.lower() == 'volver':
-                    print("Operación cancelada. Volviendo al menu de gestión de alimentos.")
+                    print("Operacion cancelada. Volviendo al menu de gestion de alimentos.")
                     break
                 
                 if gestion_tipo_alimento.existe_tipo(tipo):
@@ -193,7 +193,7 @@ def menu_alimento(gestion_alimento):
                     costo_compra = float(input("Ingrese el costo de compra: "))
                     break  #sale del bucle
                 except ValueError: #maneja el error para que se ingrese un numero
-                    print("El costo de compra debe ser un número. Inténtalo de nuevo.")
+                    print("El costo de compra debe ser un número. Intentalo de nuevo.")
 
             #valida para margen de ganancia
             while True:
@@ -201,7 +201,7 @@ def menu_alimento(gestion_alimento):
                     margen_ganancia = float(input("Ingrese el margen de ganancia (en %): "))
                     break  #sale del bucle
                 except ValueError: #maneja el error
-                    print("El margen de ganancia debe ser un número. Inténtalo de nuevo.")
+                    print("El margen de ganancia debe ser un numero. Intentalo de nuevo.")
             gestion_alimento.incluir_alimento(nombre, tipo, costo_compra, margen_ganancia)
 
         #opcion para eliminar alimentos, los muestra antes de elegir
@@ -217,7 +217,7 @@ def menu_alimento(gestion_alimento):
             print("\n --- Alimentos a modificar --- \n")
             nombre = input("Ingrese el nombre del alimento a modificar (o 'volver'): ")
             if nombre.lower() == 'volver':
-                print("Operación cancelada. Volviendo al menú de gestión de alimentos.")
+                print("Operacion cancelada. Volviendo al menú de gestión de alimentos.")
                 continue
             
             # Validación para nuevo tipo de alimento
@@ -237,7 +237,7 @@ def menu_alimento(gestion_alimento):
                         nuevo_costo_compra = float(nuevo_costo_compra)
                         break
                     except ValueError:
-                        print("Error: El costo de compra debe ser un número. Inténtalo de nuevo.")
+                        print("Error: El costo de compra debe ser un numero. Intentalo de nuevo.")
                 else:
                     nuevo_costo_compra = None
                     break
@@ -253,7 +253,7 @@ def menu_alimento(gestion_alimento):
                         else:
                             print("Error: El margen de ganancia debe estar entre 0 y 100.")
                     except ValueError:
-                        print("Error: El margen de ganancia debe ser un número. Inténtalo de nuevo.")
+                        print("Error: El margen de ganancia debe ser un numero. Intentalo de nuevo.")
                 else:
                     nuevo_margen_ganancia = None
                     break
@@ -265,8 +265,8 @@ def menu_alimento(gestion_alimento):
             
 
         elif opcion == "5":
-            print("\n Volviendo al Menú Administrativo...")
+            print("\n Volviendo al Menu Administrativo...")
             break
 
         else:
-            print("\n Opción no válida, intente de nuevo.")
+            print("\n Opción no valida, intente de nuevo.")

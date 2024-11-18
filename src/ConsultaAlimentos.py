@@ -37,11 +37,11 @@ class ConsultaAlimento:
                 for descripcion, info in db_tipos.items():
                     #si la palabra ingresada con la variable 'origen_filtro' en case insensitive se encuentra, entonces imprime el tipo
                     if info['origen'].lower() == origen_filtro:
-                        print(f"- {descripcion}: Origen: {info['origen']}, Libre de gluten: {'Sí' if info['libre_gluten'] else 'No'}")
+                        print(f"- {descripcion}: Origen: {info['origen']}, Libre de gluten: {'Si' if info['libre_gluten'] else 'No'}")
                         #transforma la variable booleana a True
                         encontrados = True
                 if not encontrados:
-                    print(f"No se encuentra ningún alimento de origen '{origen_filtro}'.")
+                    print(f"No se encuentra ningun alimento de origen '{origen_filtro}'.")
             #si no se filtra, se muestran todos los tipos de alimentos
             else:
                 for descripcion, info in db_tipos.items():
@@ -52,7 +52,7 @@ class ConsultaAlimento:
         gestion_tipo_alimento = GestionTipoAlimento()
         
         while True:
-            print("\n--- Menú de Consulta de Alimentos y Combos ---")
+            print("\n--- Menu de Consulta de Alimentos y Combos ---")
             print("1. Mostrar todos los alimentos")
             print("2. Mostrar todos los combos")
             print("3. Mostrar todos los tipos de alimentos con filtro por origen")
@@ -76,4 +76,4 @@ class ConsultaAlimento:
                 print("\n Volviendo al Menu General...")
                 break
             else:
-                print("\n Opción no válida, por favor selecciona nuevamente.")
+                print("\n Opcion no valida, por favor selecciona nuevamente.")

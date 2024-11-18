@@ -70,7 +70,7 @@ class Facturacion:
                     impuesto_alimentos += impuesto_alimento
                     print(f" - {nombre}: {cantidad} x {precio} = {precio_linea} (Impuesto: {impuesto_alimento})")
                 else:
-                    print(f" - {nombre}: formato invalido o falta de información, no se puede procesar")
+                    print(f" - {nombre}: formato invalido o falta de informacion, no se puede procesar")
 
             #calcula todos los margenes relacionados a combos contenidos en la orden
             print("\nCombos:")
@@ -222,7 +222,7 @@ class Facturacion:
 
     def menu_facturacion(self):
         while True:
-            print("\n--- Menu de Gestión de Facturacion ---")
+            print("\n--- Menu de Gestion de Facturacion ---")
             print("1. Facturar Orden")
             print("2. Consultar Factura")
             print("3. Generar Reporte de Ventas")

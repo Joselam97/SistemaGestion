@@ -16,7 +16,7 @@ class GestionTipoAlimento:
             
             #Verifica si ya esta incluido en shelve
             if descripcion in db:
-                print(f"\nError: Ya existe un tipo de alimento con la descripción '{descripcion}'.")
+                print(f"\nError: Ya existe un tipo de alimento con la descripcion '{descripcion}'.")
                 return
             
             #En caso contrario, se agrega el nuevo tipo, se pide el origen y si contiene gluten
@@ -24,7 +24,7 @@ class GestionTipoAlimento:
                 'origen': origen,
                 'libre_gluten': libre_gluten
             }
-            print(f"\nTipo de alimento '{descripcion}' agregado con éxito.")
+            print(f"\nTipo de alimento '{descripcion}' agregado con exito.")
 
 #Elimina tipo de alimento
     def eliminar_tipo(self, descripcion):
@@ -37,11 +37,11 @@ class GestionTipoAlimento:
                 return
             #En caso de estar el tipo de la descripcion en otro alimento
             if self.alimento_asociado(descripcion):
-                print(f"\nError: No se puede eliminar el tipo '{descripcion}' porque está asociado a alimentos.")
+                print(f"\nError: No se puede eliminar el tipo '{descripcion}' porque esta asociado a alimentos.")
                 return
             #Si se encuentra en shelve y no esta asociado a alimentos se puede eliminar
             del db[descripcion]
-            print(f"\nTipo de alimento '{descripcion}' eliminado con éxito.")
+            print(f"\nTipo de alimento '{descripcion}' eliminado con exito.")
 
 #Funcion para modificar tipo de alimento
     def modificar_tipo(self, descripcion, nuevo_origen=None, nuevo_libre_gluten=None):
@@ -65,7 +65,7 @@ class GestionTipoAlimento:
                 
             #se agrega a la base de datos
             db[descripcion] = tipo_alimento
-            print(f"\nTipo de alimento '{descripcion}' modificado con éxito.")
+            print(f"\nTipo de alimento '{descripcion}' modificado con exito.")
 
 #muestra lo que hay registrado
     def mostrar_tipos(self):
@@ -112,7 +112,7 @@ def menu_tipo_alimento():
     gestion = GestionTipoAlimento()
 
     while True:
-        print("\n--- Menú de Gestión de Tipos de Alimentos ---")
+        print("\n--- Menu de Gestion de Tipos de Alimentos ---")
         print("1. Incluir tipo de alimento")
         print("2. Eliminar tipo de alimento")
         print("3. Modificar tipo de alimento")
@@ -130,13 +130,13 @@ def menu_tipo_alimento():
         elif opcion == "2":
             print("\n --- Tipos de alimentos registrados --- ")
             gestion.mostrar_tipos()
-            descripcion = input("\nIngrese la descripción del tipo de alimento a eliminar: ")
+            descripcion = input("\nIngrese la descripcion del tipo de alimento a eliminar: ")
             gestion.eliminar_tipo(descripcion)
 
         elif opcion == "3":
             print("\n --- Tipos de alimentos registrados --- ")
             gestion.mostrar_tipos()
-            descripcion = input("\nIngrese la descripción del tipo de alimento a modificar: ")
+            descripcion = input("\nIngrese la descripcion del tipo de alimento a modificar: ")
             nuevo_origen = input("Ingrese el nuevo origen (dejar en blanco si no desea cambiar): ") or None
             libre_gluten_input = input("¿Es libre de gluten? (si/no, deje en blanco si no desea cambiar): ")
             
@@ -157,4 +157,4 @@ def menu_tipo_alimento():
             break
 
         else:
-            print("\n Opción no valida, intente de nuevo.")
+            print("\n Opcion no valida, intente de nuevo.")

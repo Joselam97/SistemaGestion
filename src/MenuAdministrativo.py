@@ -30,7 +30,7 @@ class OpcionesAdministrativas:
         while True:
             #Me muestra las opciones del menu de OpcionesAdministrativas
             self.mostrar_opciones_administrativas()
-            opcion = input("Selecciona una opción: ")
+            opcion = input("Selecciona una opcion: ")
         
 #Me permite moverme a las diferentes opciones 'classes' dentro del menu Administrativo
             if opcion == "1":
@@ -58,4 +58,4 @@ class OpcionesAdministrativas:
                 break
             
             else:
-                print("\nOpcion no válida, intenta de nuevo.")
+                print("\nOpcion no valida, intenta de nuevo.")

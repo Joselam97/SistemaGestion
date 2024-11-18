@@ -19,7 +19,7 @@ class ConsultaOrdenes(GestionOrdenes):
         #abre la base de datos de órdenes y mostrar las ordenes del usuario
         with shelve.open(self.ordenes_db_name) as db_ordenes:
             if usuario in db_ordenes:
-                print(f"\n--- Órdenes del usuario '{usuario}' ---")
+                print(f"\n--- Ordenes del usuario '{usuario}' ---")
                 #itera sobre cada orden del usuario, muestra el Id, fecha y hora
                 for id_orden, datos in db_ordenes[usuario].items():
                     ordenes.append(id_orden)
@@ -27,11 +27,11 @@ class ConsultaOrdenes(GestionOrdenes):
 
 #si no se encontraron ordenes, muestra un mensaje y termina el metodo
                 if not ordenes:
-                    print("No se encontraron órdenes para este usuario.")
+                    print("No se encontraron ordenes para este usuario.")
                     return
             else:
                 #muestra un mensaje si el usuario no tiene ordenes
-                print("No se encontraron órdenes para este usuario.")
+                print("No se encontraron ordenes para este usuario.")
                 return
 
         #bucle para permitir al usuario seleccionar una orden especifica y ver sus detalles
@@ -77,7 +77,7 @@ class ConsultaOrdenes(GestionOrdenes):
             print("1. Consultar ordenes de un usuario")
             print("2. Volver al Menu General")
 
-            opcion = input("Seleccione una opción: ")
+            opcion = input("Seleccione una opcion: ")
 
             if opcion == "1":
                 self.consultar_ordenes_usuario()

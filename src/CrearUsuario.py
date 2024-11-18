@@ -30,7 +30,7 @@ class CrearUsuario:
                 'fecha_nacimiento': fecha_nacimiento_obj.strftime('%d-%m-%Y'),  # Guardar en el formato correcto
                 'puntos': 10  #siempre se asignan 10pts por usuario
             }
-            print(f"Usuario '{nombre_usuario}' creado con éxito. Se han asignado 10 puntos.")
+            print(f"Usuario '{nombre_usuario}' creado con exito. Se han asignado 10 puntos.")
 
     #funcion para mostrar usuarios guardados
     def mostrar_usuarios(self):
@@ -52,7 +52,7 @@ class CrearUsuario:
             #en caso de existir el usuario, se solicita nombre de usuario para eliminarlo de 'db_name'
             if nombre_usuario in db_usuarios:
                 del db_usuarios[nombre_usuario]
-                print(f"Usuario '{nombre_usuario}' eliminado con éxito.")
+                print(f"Usuario '{nombre_usuario}' eliminado con exito.")
             else:
                 print(f"Error: El usuario '{nombre_usuario}' no existe en el sistema.")
                 

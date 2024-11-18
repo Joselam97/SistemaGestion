@@ -10,7 +10,7 @@ class MenuPrincipal:
     
     #Muestra las opciones del menu principal
     def mostrar_menu_principal(self):
-        print("\nBienvenido al sistema de gestión del restaurante")
+        print("\nBienvenido al sistema de gestion del restaurante")
         print("1. Opciones Administrativas")
         print("2. Opciones Generales")
         print("3. Salir")
@@ -20,7 +20,7 @@ class MenuPrincipal:
     def main(self):
         while True:
             self.mostrar_menu_principal()
-            opcion = input("Selecciona una opción: ")
+            opcion = input("Selecciona una opcion: ")
             
             
             if opcion == "1":
