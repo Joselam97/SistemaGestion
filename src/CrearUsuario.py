@@ -38,6 +38,7 @@ class CrearUsuario:
             #en caso de aun no haber usuarios
             if not db_usuarios:
                 print("No hay usuarios registrados.")
+                
             #en caso de haber usuarios, imprime los items del diccionario anteriormente creado
             else:
                 print("\nUsuarios registrados:")
@@ -77,7 +78,14 @@ class CrearUsuario:
                     nombre_usuario = input("\nIngrese el nombre de usuario (o 'volver'): ")
                     if nombre_usuario.lower() == 'volver':
                        break
+                    
+                     #verifica si el nombre de usuario ya existe antes de solicitar mas datos
+                    if self.verificar_usuario(nombre_usuario):
+                        print(f"Error: El nombre de usuario '{nombre_usuario}' ya existe. Intente con otro nombre.")
+                        continue
+                    
                     nombre = input("Ingrese el nombre: ")
+                    
                     fecha_nacimiento = input("Ingrese la fecha de nacimiento (formato DD-MM-YYYY): ")
     
                     self.crear_usuario(nombre_usuario, nombre, fecha_nacimiento)
