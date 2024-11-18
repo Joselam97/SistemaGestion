@@ -73,7 +73,7 @@ class ConsultaAlimento:
                 self.mostrar_tipos_alimentos(filtrar=True)
                 
             elif opcion == '4':
-                print("Saliendo del programa...")
+                print("\n Volviendo al Menu General...")
                 break
             else:
-                print("Opción no válida, por favor selecciona nuevamente.")
+                print("\n Opción no válida, por favor selecciona nuevamente.")
